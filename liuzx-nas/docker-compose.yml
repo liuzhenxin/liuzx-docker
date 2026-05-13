@@ -1,0 +1,32 @@
+services:
+  liuzx-nas:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nas
+    image: liuzx-nas:${LIUZX_NAS_VERSION}
+    env_file:
+      - .env
+    ports:
+      - "6443:6443"
+    environment:
+      - LANG=zh_CN.UTF-8
+      - TZ=Asia/Shanghai
+      - JAVA_OPTS=-Xms512m -Xmx512m -Xmn256m
+      - SERVER_PORT=6443
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    volumes:
+      - ./logs:/tmp
+      - ./Sm4CbcRunner.class:/tmp/Sm4CbcRunner.class:ro
+      - ./sm4-cbc-test.sh:/tmp/sm4-cbc-test.sh:ro
+      - ./data:/home/nas/data
+      - /data/static/acim2/yjhx:/data/static/acim2/yjhx:rw
+      - /data/static/qcxfp/yjhx:/data/static/qcxfp/yjhx:rw
+    restart: unless-stopped
+    networks:
+      - pki-network
+
+networks:
+  pki-network:
+    external: true
+    name: pki-network

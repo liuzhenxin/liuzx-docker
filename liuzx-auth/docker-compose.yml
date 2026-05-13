@@ -1,0 +1,26 @@
+services:
+  liuzx-auth:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: auth
+    image: liuzx-auth:${LIUZX_AUTH_VERSION}
+    env_file:
+      - .env
+    ports:
+      - "1111:1111"
+    environment:
+      - LANG=zh_CN.UTF-8
+      - TZ=Asia/Shanghai
+      - JVM_OPTS=-Xms512m -Xmx512m -Xmn256m
+    volumes:
+      - ./logs:/tmp
+      - ./data:/home/auth/data
+    restart: unless-stopped
+    networks:
+      - pki-network
+
+networks:
+  pki-network:
+    external: true
+    name: pki-network

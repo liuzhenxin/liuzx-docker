@@ -1,0 +1,20 @@
+services:
+  liuzx-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ui
+    image: liuzx-ui:${LIUZX_UI_VERSION:-latest}
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./dist:/usr/share/nginx/html
+    networks:
+      - pki-network
+
+networks:
+  pki-network:
+    external: true
+    name: pki-network

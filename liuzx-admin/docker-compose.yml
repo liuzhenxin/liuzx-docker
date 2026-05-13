@@ -1,0 +1,26 @@
+services:
+  liuzx-admin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: admin
+    image: liuzx-admin:${LIUZX_VERSION}
+    env_file:
+      - .env
+    ports:
+      - "9990:9990"
+    environment:
+      - LANG=zh_CN.UTF-8
+      - TZ=Asia/Shanghai
+      - JVM_OPTS=-Xms512m -Xmx512m -Xmn256m
+    volumes:
+      - ./logs:/tmp
+      - ./data:/home/admin/data
+    restart: unless-stopped
+    networks:
+      - pki-network
+
+networks:
+  pki-network:
+    external: true
+    name: pki-network

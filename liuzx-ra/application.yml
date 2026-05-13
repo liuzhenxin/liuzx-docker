@@ -1,0 +1,157 @@
+server:
+  port: ${SERVER_PORT:4443}
+  servlet:
+    context-path: /api
+  ssl:
+    enabled: false
+  http2:
+    enabled: false
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_SECRET_KEY:}
+
+spring:
+  application:
+    name: ${SERVICE_ID:liuzx-ra}
+  profiles:
+    active: docker
+  cloud:
+    nacos:
+      discovery:
+        enabled: ${NACOS_DISCOVERY_ENABLED:false}
+        server-addr: ${NACOS_ADDRESS:nacos:8848}
+        namespace: ${NACOS_NAMESPACE:}
+        username: ${NACOS_USERNAME:}
+        password: ${NACOS_PASSWORD:}
+        group: ${NACOS_GROUP:LIUZX_GROUP}
+      config:
+        enabled: ${NACOS_CONFIG_ENABLED:false}
+        server-addr: ${NACOS_ADDRESS:nacos:8848}
+        namespace: ${NACOS_NAMESPACE:}
+        username: ${NACOS_USERNAME:}
+        password: ${NACOS_PASSWORD:}
+        group: ${NACOS_GROUP:LIUZX_GROUP}
+        import-check:
+          enabled: false
+  config:
+    import: []
+  datasource:
+    dynamic:
+      p6spy: false
+      strict: false
+      datasource:
+        master:
+          type: com.zaxxer.hikari.HikariDataSource
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://${MYSQL_HOST:mysql}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:lcloud_ra_4}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+          username: ${MYSQL_USERNAME:root}
+          password: ${MYSQL_PASSWORD:}
+        domain:
+          type: com.zaxxer.hikari.HikariDataSource
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://${MYSQL_HOST:mysql}:${MYSQL_PORT:3306}/${MYSQL_DOMAIN_DATABASE:lcloud_platform_domain_4}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+          username: ${MYSQL_USERNAME:root}
+          password: ${MYSQL_PASSWORD:}
+  data:
+    redis:
+      client-type: lettuce
+      host: ${REDIS_HOST:redis}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      connect-timeout: 60000ms
+      timeout: 60000ms
+  Redisson:
+    node:
+      type: single
+      single:
+        address: redis://${spring.data.redis.host}:${spring.data.redis.port}
+    password: ${spring.data.redis.password}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+    consumer:
+      group-id: ${spring.application.name}
+      enable-auto-commit: false
+      max-poll-records: 500
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.liuzx.common.kafka.config.ForyKafkaDeserializer
+      fetch-min-size: 102400
+    producer:
+      retries: 5
+      batch-size: 1048576
+      buffer-memory: 33554432
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.liuzx.common.kafka.config.ForyKafkaSerializer
+      acks: all
+      compression-type: lz4
+    listener:
+      concurrency: 5
+      ack-mode: manual
+      type: batch
+      missing-topics-fatal: true
+      observation-enabled: true
+    admin:
+      auto-create: true
+    template:
+      observation-enabled: true
+  liquibase:
+    enabled: false
+  security:
+    oauth2:
+      resource-server:
+        enabled: ${SECURITY_ENABLED:true}
+        request-matcher:
+          ignore-patterns:
+            GET:
+              - /actuator/**=liuzx-ra
+              - /v3/api-docs/**=liuzx-ra
+              - /scalar=liuzx-ra
+              - /scalar/**=liuzx-ra
+              - /favicon.svg=liuzx-ra
+              - /swagger-ui/**=liuzx-ra
+              - /swagger-ui.html=liuzx-ra
+              - /error=liuzx-ra
+
+mybatis-plus:
+  global-config:
+    db-config:
+      column-format: "`%s`"
+  tenant:
+    enabled: true
+  sql-monitor:
+    enabled: true
+    interval: 0
+  mapper-locations: classpath*:/mapper/test/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+scalar:
+  enabled: true
+  url: /api-gateway/ra/v3/api-docs
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  tracing:
+    export:
+      enabled: false
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+logging:
+  level:
+    org.liuzx: INFO
+    org.springframework: INFO

@@ -1,0 +1,27 @@
+services:
+  liuzx-ca:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ca
+    image: liuzx-ca:${LIUZX_CA_VERSION}
+    env_file:
+      - .env
+    ports:
+      - "4443:4443"
+    environment:
+      - LANG=zh_CN.UTF-8
+      - TZ=Asia/Shanghai
+      - JAVA_OPTS=-Xms512m -Xmx512m -Xmn256m
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    volumes:
+      - ./logs:/tmp
+      - ./data:/home/ca/data
+    restart: unless-stopped
+    networks:
+      - pki-network
+
+networks:
+  pki-network:
+    external: true
+    name: pki-network

@@ -1,0 +1,36 @@
+services:
+  liuzx-nacos:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nacos
+    image: liuzx-nacos:${LIUZX_NACOS_VERSION}
+    env_file:
+      - .env
+    ports:
+      - "8848:8848"
+      - "8048:8048"
+      - "9848:9848"
+    environment:
+      - LANG=zh_CN.UTF-8
+      - TZ=Asia/Shanghai
+      - MODE=standalone
+      - PREFER_HOST_MODE=nacos
+      - JVM_OPTS=-Xms512m -Xmx512m -Xmn256m
+      - NACOS_OPTS=
+    volumes:
+      - ./logs:/tmp
+      - ./data:/home/nacos/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c ': > /dev/tcp/localhost/8848'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - pki-network
+
+networks:
+  pki-network:
+    external: true
+    name: pki-network

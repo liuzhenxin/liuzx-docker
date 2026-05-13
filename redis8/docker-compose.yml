@@ -1,0 +1,24 @@
+services:
+  redis:
+    image: redis:8.2
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    environment:
+      TZ: Asia/Shanghai
+    command: >
+      redis-server
+      --appendonly yes
+      --requirepass passw0rd
+    volumes:
+      - ./data:/data
+    tty: true
+    stdin_open: true
+    networks:
+      - pki-network
+
+networks:
+  pki-network:
+    external: true
+    name: pki-network

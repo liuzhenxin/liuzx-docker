@@ -1,0 +1,38 @@
+services:
+  liuzx-kmc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kmc
+    image: liuzx-kmc:${LIUZX_KMC_VERSION}
+    env_file:
+      - .env
+    ports:
+      - "${KMC_PORT:-3443}:3443"
+    environment:
+      - LANG=zh_CN.UTF-8
+      - TZ=Asia/Shanghai
+      - JAVA_OPTS=${JAVA_OPTS:--Xms512m -Xmx1024m -Xmn256m}
+      - KMC_MASTER_KEY=${KMC_MASTER_KEY}
+      - SERVER_PORT=3443
+      - SERVICE_ID=liuzx-kmc
+      - NODE_ID=${NODE_ID:-1}
+      - NACOS_DISCOVERY_ADDRESS=${NACOS_DISCOVERY_ADDRESS:-nacos:8848}
+      - NACOS_CONFIG_ADDRESS=${NACOS_CONFIG_ADDRESS:-nacos:8848}
+      - NACOS_NAMESPACE=${NACOS_NAMESPACE:-0dac1a68-2f01-40df-bd26-bf0cb199057a}
+      - NACOS_GROUP=${NACOS_GROUP:-LIUZX_GROUP}
+      - NACOS_USERNAME=${NACOS_USERNAME:-nacos}
+      - NACOS_PASSWORD=${NACOS_PASSWORD:-nacos}
+      - NACOS_CLUSTER_NAME=${NACOS_CLUSTER_NAME:-pki-cluster}
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=${SPRING_KAFKA_BOOTSTRAP_SERVERS:-kafka:9092}
+    volumes:
+      - ./logs:/tmp
+      - ./data:/home/kmc/data
+    restart: unless-stopped
+    networks:
+      - pki-network
+
+networks:
+  pki-network:
+    external: true
+    name: pki-network

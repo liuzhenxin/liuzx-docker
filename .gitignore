@@ -1,0 +1,41 @@
+.DS_Store
+
+# Local environment files
+.env
+.env.*
+**/.env
+**/.env.*
+
+# Runtime data and logs
+data/
+logs/
+**/data/
+**/logs/
+
+# Build artifacts
+dist/
+build/
+target/
+node_modules/
+*.log
+*.jar
+*.jar*
+*jar*
+*.war
+*.ear
+*.bak
+*.bak*
+*.tar
+*.tar.gz
+*.zip
+backups/
+**/backups/
+redis-data/
+**/redis-data/
+appendonlydir/
+dump.rdb
+
+# Editor and OS metadata
+.idea/
+.vscode/
+Thumbs.db
