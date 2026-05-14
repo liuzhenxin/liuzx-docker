@@ -1,12 +1,12 @@
 services:
   mysql:
     image: mysql:8.0
-    container_name: mysql
+    container_name: liuzx-mysql
     restart: unless-stopped
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: "11111111"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:-11111111}"
       MYSQL_ROOT_HOST: "%" # 允许 root 从任意主机连接（容器初始化时生效）
       TZ: Asia/Shanghai
     command:
@@ -16,8 +16,22 @@ services:
     volumes:
       - ./data:/var/lib/mysql
       - ./mysql/init:/docker-entrypoint-initdb.d/
+    init: true
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
     networks:
-      - pki-network
+      pki-network:
+        aliases:
+          - mysql
 
 networks:
   pki-network:

@@ -1,7 +1,13 @@
+.git
+.env
+.env.*
 logs/
 data/
+backups/
 *.bak.*
 *.bad.*
+*.tmp
+*.log
 liuzx-kmc.jar.bak.*
 liuzx-kmc.jar.bad.*
 .DS_Store

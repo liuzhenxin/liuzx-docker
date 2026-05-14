@@ -3,10 +3,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: nas
+    container_name: liuzx-nas
     image: liuzx-nas:${LIUZX_NAS_VERSION}
     env_file:
       - .env
+    user: "${NAS_RUN_UID:-1002}:${NAS_RUN_GID:-1002}"
     ports:
       - "6443:6443"
     environment:
@@ -17,14 +18,29 @@ services:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     volumes:
       - ./logs:/tmp
-      - ./Sm4CbcRunner.class:/tmp/Sm4CbcRunner.class:ro
-      - ./sm4-cbc-test.sh:/tmp/sm4-cbc-test.sh:ro
       - ./data:/home/nas/data
+      - /Users/liuzhenxin/20240427:/Users/liuzhenxin/20240427:ro
+      - /Users/liuzhenxin/20240427-enc:/Users/liuzhenxin/20240427-enc:rw
+      - /Users/liuzhenxin/20240427-dec-test:/Users/liuzhenxin/20240427-dec-test:rw
       - /data/static/acim2/yjhx:/data/static/acim2/yjhx:rw
       - /data/static/qcxfp/yjhx:/data/static/qcxfp/yjhx:rw
+    init: true
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c ': > /dev/tcp/127.0.0.1/6443'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     networks:
-      - pki-network
+      pki-network:
+        aliases:
+          - nas
 
 networks:
   pki-network:

@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ca
+    container_name: liuzx-ca
     image: liuzx-ca:${LIUZX_CA_VERSION}
     env_file:
       - .env
@@ -17,9 +17,23 @@ services:
     volumes:
       - ./logs:/tmp
       - ./data:/home/ca/data
+    init: true
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c ': > /dev/tcp/127.0.0.1/4443'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     networks:
-      - pki-network
+      pki-network:
+        aliases:
+          - ca
 
 networks:
   pki-network:

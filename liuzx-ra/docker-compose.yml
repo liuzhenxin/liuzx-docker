@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ra
+    container_name: liuzx-ra
     image: liuzx-ra:${LIUZX_RA_VERSION}
     env_file:
       - .env
@@ -40,9 +40,23 @@ services:
       - ./logs:/tmp
       - ./data:/home/ra/data
       - ./application.yml:/app/application.yml:ro
+    init: true
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c ': > /dev/tcp/127.0.0.1/4443'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     networks:
-      - pki-network
+      pki-network:
+        aliases:
+          - ra
 
 networks:
   pki-network:
