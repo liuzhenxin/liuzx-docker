@@ -146,9 +146,7 @@ docker exec -it liuzx-mysql mysql -uroot -p
 - `scripts/offline-package.sh` — 构建离线 tar 包（docker save + tar）
 - `scripts/offline-install.sh` — 服务器端从 tar 包安装
 - `scripts/offline-manage.sh` — 日常运维（启动/停止/升级/备份/日志）
-- `docs/OPERATION_MANUAL.md` — 完整运维手册，含故障排查
-- `docs/OFFLINE_DEPLOY.md` — 离线部署快速指南
-- `docs/REMOTE_DOCKER_OFFLINE_UPGRADE.md` — 特定服务器 `211.88.41.215` 的升级指南
+- `docs/OPERATION_MANUAL.md` — 完整运维手册（部署、升级、回滚、故障排查）
 
 ## 重要约定
 

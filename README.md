@@ -40,5 +40,4 @@ cd /opt/liuzx-docker
 
 详细说明见：
 
-- [docs/OFFLINE_DEPLOY.md](docs/OFFLINE_DEPLOY.md)
 - [docs/OPERATION_MANUAL.md](docs/OPERATION_MANUAL.md)
