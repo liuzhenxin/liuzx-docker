@@ -7,6 +7,7 @@ services:
       MYSQL_USER: "${KMC_DB_USER:-root}"
       MYSQL_PASSWORD: "${KMC_DB_PASSWORD:-11111111}"
       KMC_DB_NAME: "${KMC_DB_NAME:-lcloud_kmc_4}"
+      PLATFORM_DB_NAME: "${PLATFORM_DB_NAME:-lcloud_platform_4}"
       INIT_DIR: /kmc-db-init
     volumes:
       - ./scripts/init-kmc-db.sh:/usr/local/bin/init-kmc-db.sh:ro

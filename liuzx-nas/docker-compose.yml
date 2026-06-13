@@ -7,6 +7,7 @@ services:
       MYSQL_USER: "${NAS_DB_USER:-root}"
       MYSQL_PASSWORD: "${NAS_DB_PASSWORD:-11111111}"
       NAS_DB_NAME: "${NAS_DB_NAME:-lcloud_nas_4}"
+      PLATFORM_DB_NAME: "${PLATFORM_DB_NAME:-lcloud_platform_4}"
       INIT_DIR: /nas-db-init
     volumes:
       - ./scripts/init-nas-db.sh:/usr/local/bin/init-nas-db.sh:ro

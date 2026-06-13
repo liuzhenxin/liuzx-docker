@@ -4,11 +4,11 @@ set -eu
 MYSQL_CONTAINER="${MYSQL_CONTAINER:-liuzx-mysql}"
 MYSQL_USER="${MYSQL_USER:-root}"
 MYSQL_PASSWORD="${MYSQL_PASSWORD:-11111111}"
-NAS_DB_NAME="${NAS_DB_NAME:-lcloud_nas_4}"
+LICENSE_DB_NAME="${LICENSE_DB_NAME:-lcloud_license_4}"
 PLATFORM_DB_NAME="${PLATFORM_DB_NAME:-lcloud_platform_4}"
-INIT_DIR="${INIT_DIR:-/nas-db-init}"
+INIT_DIR="${INIT_DIR:-/license-db-init}"
 
-for db_name in "${NAS_DB_NAME}" "${PLATFORM_DB_NAME}"; do
+for db_name in "${LICENSE_DB_NAME}" "${PLATFORM_DB_NAME}"; do
   case "${db_name}" in
     *[!A-Za-z0-9_]* | "")
       echo "Invalid database name: ${db_name}" >&2
@@ -45,9 +45,9 @@ table_exists() {
   [ "${count}" = "1" ]
 }
 
-nas_platform_menu_count() {
+license_platform_menu_count() {
   mysql_exec --batch --skip-column-names "${PLATFORM_DB_NAME}" \
-    -e "SELECT COUNT(*) FROM sys_menu WHERE tenant_id=10 AND id=10010;"
+    -e "SELECT COUNT(*) FROM sys_menu WHERE tenant_id=2 AND id=2000;"
 }
 
 echo "Waiting for existing MySQL container ${MYSQL_CONTAINER}..."
@@ -60,27 +60,27 @@ done
 
 mysqladmin_ping >/dev/null
 
-echo "Ensuring database ${NAS_DB_NAME} exists..."
+echo "Ensuring database ${LICENSE_DB_NAME} exists..."
 mysql_exec < "${INIT_DIR}/00_create_database.sql"
 
-nas_table_count="$(table_count "${NAS_DB_NAME}")"
-if [ "${nas_table_count}" = "0" ]; then
-  echo "Importing ${NAS_DB_NAME} schema..."
-  mysql_exec < "${INIT_DIR}/01_nas_4_schema.sql"
+license_table_count="$(table_count "${LICENSE_DB_NAME}")"
+if [ "${license_table_count}" = "0" ]; then
+  echo "Importing ${LICENSE_DB_NAME} schema..."
+  mysql_exec < "${INIT_DIR}/01_license_4_schema.sql"
 else
-  echo "Database ${NAS_DB_NAME} already has tables, skipping NAS schema import."
+  echo "Database ${LICENSE_DB_NAME} already has tables, skipping License schema import."
 fi
 
 if table_exists "${PLATFORM_DB_NAME}" "sys_menu"; then
-  platform_menu_count="$(nas_platform_menu_count)"
+  platform_menu_count="$(license_platform_menu_count)"
   if [ "${platform_menu_count}" = "0" ]; then
-    echo "Importing NAS platform menu, permission and base user data into ${PLATFORM_DB_NAME}..."
-    mysql_exec "${PLATFORM_DB_NAME}" < "${INIT_DIR}/02_nas_4_platform_data.sql"
+    echo "Importing License platform menu, permission and base data into ${PLATFORM_DB_NAME}..."
+    mysql_exec "${PLATFORM_DB_NAME}" < "${INIT_DIR}/02_license_4_platform_data.sql"
   else
-    echo "NAS platform data already exists in ${PLATFORM_DB_NAME}, skipping platform data import."
+    echo "License platform data already exists in ${PLATFORM_DB_NAME}, skipping platform data import."
   fi
 else
-  echo "Database ${PLATFORM_DB_NAME} is not initialized, skipping NAS platform data import."
+  echo "Database ${PLATFORM_DB_NAME} is not initialized, skipping License platform data import."
 fi
 
-echo "NAS database initialization completed."
+echo "License database initialization completed."

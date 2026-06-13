@@ -1,4 +1,23 @@
 services:
+  liuzx-license-db-init:
+    image: docker:27-cli
+    container_name: liuzx-license-db-init
+    environment:
+      MYSQL_CONTAINER: "${LICENSE_DB_MYSQL_CONTAINER:-liuzx-mysql}"
+      MYSQL_USER: "${LICENSE_DB_USER:-root}"
+      MYSQL_PASSWORD: "${LICENSE_DB_PASSWORD:-11111111}"
+      LICENSE_DB_NAME: "${LICENSE_DB_NAME:-lcloud_license_4}"
+      PLATFORM_DB_NAME: "${PLATFORM_DB_NAME:-lcloud_platform_4}"
+      INIT_DIR: /license-db-init
+    volumes:
+      - ./scripts/init-license-db.sh:/usr/local/bin/init-license-db.sh:ro
+      - ./mysql/init:/license-db-init:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["/bin/sh", "/usr/local/bin/init-license-db.sh"]
+    init: true
+    restart: "no"
+    network_mode: none
+
   liuzx-license:
     build:
       context: .
@@ -16,6 +35,9 @@ services:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - SPRING_REDISSON_PASSWORD=${REDIS_PASSWORD}
       - SPRING_REDISSON_NODE_SINGLE_ADDRESS=redis://redis:6379
+    depends_on:
+      liuzx-license-db-init:
+        condition: service_completed_successfully
     volumes:
       - ./logs:/tmp
       - ./data:/home/license/data

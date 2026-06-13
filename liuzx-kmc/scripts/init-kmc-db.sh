@@ -5,14 +5,17 @@ MYSQL_CONTAINER="${MYSQL_CONTAINER:-liuzx-mysql}"
 MYSQL_USER="${MYSQL_USER:-root}"
 MYSQL_PASSWORD="${MYSQL_PASSWORD:-11111111}"
 KMC_DB_NAME="${KMC_DB_NAME:-lcloud_kmc_4}"
+PLATFORM_DB_NAME="${PLATFORM_DB_NAME:-lcloud_platform_4}"
 INIT_DIR="${INIT_DIR:-/kmc-db-init}"
 
-case "${KMC_DB_NAME}" in
-  *[!A-Za-z0-9_]* | "")
-    echo "Invalid KMC_DB_NAME: ${KMC_DB_NAME}" >&2
-    exit 1
-    ;;
-esac
+for db_name in "${KMC_DB_NAME}" "${PLATFORM_DB_NAME}"; do
+  case "${db_name}" in
+    *[!A-Za-z0-9_]* | "")
+      echo "Invalid database name: ${db_name}" >&2
+      exit 1
+      ;;
+  esac
+done
 
 mysql_exec() {
   docker exec -i \
@@ -29,23 +32,22 @@ mysqladmin_ping() {
 }
 
 table_count() {
+  db_name="$1"
   mysql_exec --batch --skip-column-names \
-    -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='${KMC_DB_NAME}';"
+    -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='${db_name}';"
 }
 
 table_exists() {
-  table_name="$1"
+  db_name="$1"
+  table_name="$2"
   count="$(mysql_exec --batch --skip-column-names \
-    -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='${KMC_DB_NAME}' AND table_name='${table_name}';")"
+    -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='${db_name}' AND table_name='${table_name}';")"
   [ "${count}" = "1" ]
 }
 
-base_data_count() {
-  ca_count="$(mysql_exec --batch --skip-column-names "${KMC_DB_NAME}" \
-    -e "SELECT COUNT(*) FROM kmc_ca WHERE tenant_id=3;")"
-  strategy_count="$(mysql_exec --batch --skip-column-names "${KMC_DB_NAME}" \
-    -e "SELECT COUNT(*) FROM kmc_pool_strategy WHERE tenant_id=3;")"
-  echo "${ca_count}:${strategy_count}"
+kmc_platform_menu_count() {
+  mysql_exec --batch --skip-column-names "${PLATFORM_DB_NAME}" \
+    -e "SELECT COUNT(*) FROM sys_menu WHERE tenant_id=3 AND id=3010;"
 }
 
 echo "Waiting for existing MySQL container ${MYSQL_CONTAINER}..."
@@ -61,7 +63,7 @@ mysqladmin_ping >/dev/null
 echo "Ensuring database ${KMC_DB_NAME} exists..."
 mysql_exec < "${INIT_DIR}/00_create_database.sql"
 
-kmc_table_count="$(table_count)"
+kmc_table_count="$(table_count "${KMC_DB_NAME}")"
 if [ "${kmc_table_count}" = "0" ]; then
   echo "Importing ${KMC_DB_NAME} schema..."
   mysql_exec < "${INIT_DIR}/01_kmc_4_schema.sql"
@@ -69,19 +71,16 @@ else
   echo "Database ${KMC_DB_NAME} already has tables, skipping KMC schema import."
 fi
 
-if table_exists "kmc_ca" && table_exists "kmc_pool_strategy"; then
-  counts="$(base_data_count)"
-  case "${counts}" in
-    0:* | *:0)
-      echo "Importing ${KMC_DB_NAME} base data..."
-      mysql_exec "${KMC_DB_NAME}" < "${INIT_DIR}/02_kmc_4_data.sql"
-      ;;
-    *)
-      echo "KMC base data already exists in ${KMC_DB_NAME}, skipping seed data import."
-      ;;
-  esac
+if table_exists "${PLATFORM_DB_NAME}" "sys_menu"; then
+  platform_menu_count="$(kmc_platform_menu_count)"
+  if [ "${platform_menu_count}" = "0" ]; then
+    echo "Importing KMC platform menu, permission and base user data into ${PLATFORM_DB_NAME}..."
+    mysql_exec "${PLATFORM_DB_NAME}" < "${INIT_DIR}/02_kmc_4_data.sql"
+  else
+    echo "KMC platform data already exists in ${PLATFORM_DB_NAME}, skipping platform data import."
+  fi
 else
-  echo "KMC base tables do not exist, skipping seed data import."
+  echo "Database ${PLATFORM_DB_NAME} is not initialized, skipping KMC platform data import."
 fi
 
 echo "KMC database initialization completed."
