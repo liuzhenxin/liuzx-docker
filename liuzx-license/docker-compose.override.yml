@@ -1,0 +1,42 @@
+services:
+  liuzx-license:
+    environment:
+      LICENSE_SIGNING_PRIVATE_KEY_PEM: |-
+        -----BEGIN PRIVATE KEY-----
+        MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC1e5RrlY3Jtt06
+        NXMeS3/6iW4ggHL7dr4DdzSwwSQTe9UrOoT3e/WIahzZjJ+2Znd4ThC8qm43Dx6K
+        WYfBWIC/EnnTFxZ5JKL+dVHbLXul1L7/glFMsXAq8MDa6EU3vWh6c4EQdFXMMqVZ
+        ZpMoIU+RDO/wfO6Y7R6LF5QeJCIxtU9y0WBo24YDbHP4B1IUfdSPRFjwqHdDok84
+        a6b6cUm4cUNzt6LD3lmT7h9Jy2B+oMk1z27/2nGgetDLpU7vw+OfGUCFthzBxvwC
+        h9F8OQvXcKZfTo50/FEWdzpV4C2IYOMptKWjK8fZ0Sb1deBaN8JT/ZHHNy5GIBEO
+        wwv4PIuJAgMBAAECggEAG8CoM8ONCTnDnvEph4p4KbH2e1XpP3crG5CRKC6A+9HG
+        CXRLfSUhqRjBDKuqiNQmlOkrOg6+CAFx5CpIzlJgbde/dX5kW2Y03sDGIcRU0kk0
+        ZBJjqFzCEG78rv0yCJIYdhFPvVps/GsKSh+bhVmCt2XJE3enbQ9lylNyvSE9cWhL
+        +A56s37n2tMXz9/DP0ff/vBD9Mdvxoz/RBmLzQYW367TR6SJaYD/nfnTvnGo2+JK
+        M4+PyVGlbpX4V0pr0UsmOv/FS1dtNsoSI2h7i5azqjCADwkkTG4+gndX7bg4JLyE
+        TZd2YUByXOHesJLcs43AFN/kHWx9Ynr5Mt7xy5Cy4QKBgQD5wTQZUT1/GbahvwO7
+        1HSZzP9vkjtHv26aCQ4Zd9nrlMiTvD1yXJxxQTTQ5Tok6JKRMItX6C8L4HMp3LMO
+        QEDtZ/Fd1eySgr8Qgjn/c+TuGNUz4kK/EMrFzQ6OwWJ5dAAsXAqCovPl7qF+z9em
+        WHRqR3/TsTlmxuLrJH3pjyYb9QKBgQC6BVXjkwEAEvb+IiM7iwEF3MboHbbJ50rN
+        1RKpL19Txjo13F4DSr11tXB2YzQEA7YXLNBXpQsd0BYwOYPF4NZmZmlsY/Rwfhdg
+        MtbdOAnAb5IKb1Lw6nAaNjQkYAUw9uIkvbszYbkx8GQifY0heWYRObRUdEiaG0BS
+        4E3ni2foxQKBgEjB8/98H0Irp3yvPNM3LVCw26kRHJvmNL5C7QyWUbHDgjsnl279
+        c8W6jTxdyvZ9mlUZoz5UsX/wPxxu4uq/5SpEIZiIfYag+DBC/8pfZM3IBjQ7Md6f
+        cbL17cvAooNnO7Wwio9MEWlmfz2GJviaxC9B7QcqleJPBkQiOVwVC7ERAoGAG5KC
+        4pJ9iXdGKPECa+b0pdvNl8Yfu9mOmufENlORO6ecJTOes7o2TuYv3zxhD19FdDXu
+        Q69w8GBRiaBcyc3DubXgVnKSXsIx0M54Tp3pxB5FdUp+7rqxFxGFtQaOfm15o5yD
+        zN/lRWOuU/ZsHtQRrufwtLvvrvfvFtmscm+VXUkCgYAvom5BnrMnbYlkSchwEo1B
+        vIyw0b6ESa1RsKfh7eVL9OIwedsDD4J9gqhY2rz2aTi7UE0dgffnl0kcKdvirB/z
+        odfCa0+fQT20HPgnBWY1M3HxOT6rv417RMRkAPDoLrMUTi+sEvfKYyShJ2eIP+EU
+        f7M0e1u5TBRskw7kKq3WLg==
+        -----END PRIVATE KEY-----
+      LICENSE_SIGNING_PUBLIC_KEY_PEM: |-
+        -----BEGIN PUBLIC KEY-----
+        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtXuUa5WNybbdOjVzHkt/
+        +oluIIBy+3a+A3c0sMEkE3vVKzqE93v1iGoc2YyftmZ3eE4QvKpuNw8eilmHwViA
+        vxJ50xcWeSSi/nVR2y17pdS+/4JRTLFwKvDA2uhFN71oenOBEHRVzDKlWWaTKCFP
+        kQzv8HzumO0eixeUHiQiMbVPctFgaNuGA2xz+AdSFH3Uj0RY8Kh3Q6JPOGum+nFJ
+        uHFDc7eiw95Zk+4fSctgfqDJNc9u/9pxoHrQy6VO78PjnxlAhbYcwcb8AofRfDkL
+        13CmX06OdPxRFnc6VeAtiGDjKbSloyvH2dEm9XXgWjfCU/2RxzcuRiARDsML+DyL
+        iQIDAQAB
+        -----END PUBLIC KEY-----

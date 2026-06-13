@@ -575,10 +575,18 @@ sudo NAS_HOST_USER=用户名 ./install.sh --target /opt/liuzx-docker --start
 sudo NAS_RUN_UID=1002 NAS_RUN_GID=1002 ./install.sh --target /opt/liuzx-docker --start
 ```
 
+`/data/static/acim2/yjhx` 是源文件目录，安装脚本不会修改该目录已有文件归属；只会调整迁移目标目录 `/data/static/qcxfp/yjhx`。
+
+安装脚本默认只调整迁移目标目录 `/data/static/qcxfp/yjhx` 本身的归属，不递归扫描已有文件，避免大目录安装长时间等待。如需同时修复目标目录历史文件归属，可显式开启递归：
+
+```bash
+sudo NAS_RUN_UID=1002 NAS_RUN_GID=1002 NAS_CHOWN_RECURSIVE=1 ./install.sh --target /opt/liuzx-docker --start
+```
+
 如果手动准备目录，需要同时设置目录归属：
 
 ```bash
-sudo chown -R 1002:1002 /data/static/acim2/yjhx /data/static/qcxfp/yjhx
+sudo chown 1002:1002 /data/static/qcxfp/yjhx
 ```
 
 验证 NAS 容器运行用户和宿主机文件归属：
@@ -611,3 +619,4 @@ cd /opt/liuzx-docker
 ./scripts/offline-manage.sh health
 docker ps
 ```
+## 

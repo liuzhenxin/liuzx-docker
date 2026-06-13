@@ -15,7 +15,7 @@ services:
       - --default-authentication-plugin=caching_sha2_password
     volumes:
       - ./data:/var/lib/mysql
-      - ./mysql/init:/docker-entrypoint-initdb.d/
+      - ./mysql/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf:ro
     init: true
     logging:
       driver: json-file

@@ -130,6 +130,7 @@ cd /opt/liuzx-docker
 - NAS compose 依赖宿主机路径 `/data/static/acim2/yjhx` 和 `/data/static/qcxfp/yjhx`，脚本会尝试创建。
 - NAS 容器默认按宿主机 `dppc` 用户的 UID/GID 运行，用于保证迁移后写入 `/data/static/` 的文件归属为 `dppc`。如目标用户不是 `dppc`，安装时可指定 `NAS_HOST_USER=用户名`。
 - 如果需要强制指定 NAS 写入文件的宿主机 UID/GID，例如 `/data/static/qcxfp/yjhx` 要生成 UID 为 `1002` 的文件，可在安装时指定 `NAS_RUN_UID=1002 NAS_RUN_GID=1002`。
+- `/data/static/acim2/yjhx` 是源文件目录，安装脚本不会修改该目录已有文件归属；只会调整迁移目标目录 `/data/static/qcxfp/yjhx`。
 - 如需迁移现有数据库数据，请单独导出 MySQL 数据或拷贝 `mysql8/data`，默认离线包只带初始化 SQL。
 
 例如使用 `dppc` 作为 NAS 文件写入用户：
@@ -142,6 +143,12 @@ sudo NAS_HOST_USER=dppc ./install.sh --target /opt/liuzx-docker --start
 
 ```bash
 sudo NAS_RUN_UID=1002 NAS_RUN_GID=1002 ./install.sh --target /opt/liuzx-docker --start
+```
+
+安装脚本默认只调整迁移目标目录 `/data/static/qcxfp/yjhx` 本身的归属，不递归扫描已有文件，避免大目录安装长时间等待。如需同时修复目标目录历史文件归属，可显式开启递归：
+
+```bash
+sudo NAS_RUN_UID=1002 NAS_RUN_GID=1002 NAS_CHOWN_RECURSIVE=1 ./install.sh --target /opt/liuzx-docker --start
 ```
 
 验证：

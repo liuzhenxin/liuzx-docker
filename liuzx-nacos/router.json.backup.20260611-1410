@@ -1,0 +1,354 @@
+[
+  {
+    "id": "liuzx-admin-scalar-exact",
+    "uri": "lb://liuzx-admin",
+    "order": 0,
+    "filters": [
+      {
+        "name": "RewritePath",
+        "args": {
+          "_genkey_0": "/api-gateway/admin/scalar",
+          "_genkey_1": "/scalar"
+        }
+      }
+    ],
+    "metadata": {
+      "version": "v1"
+    },
+    "predicates": [
+      {
+        "name": "Path",
+        "args": {
+          "pattern": "/api-gateway/admin/scalar"
+        }
+      },
+      {
+        "name": "Weight",
+        "args": {
+          "_genkey_0": "admin-scalar-exact",
+          "_genkey_1": "100"
+        }
+      }
+    ]
+  },
+  {
+    "id": "liuzx-admin-docs-exact",
+    "uri": "lb://liuzx-admin",
+    "order": 0,
+    "filters": [
+      {
+        "name": "RewritePath",
+        "args": {
+          "_genkey_0": "/api-gateway/admin/(?<path>v3/api-docs)",
+          "_genkey_1": "/${path}"
+        }
+      }
+    ],
+    "metadata": {
+      "version": "v1"
+    },
+    "predicates": [
+      {
+        "name": "Path",
+        "args": {
+          "pattern": "/api-gateway/admin/v3/api-docs"
+        }
+      },
+      {
+        "name": "Weight",
+        "args": {
+          "_genkey_0": "admin-docs-exact",
+          "_genkey_1": "100"
+        }
+      }
+    ]
+  },
+  {
+    "id": "liuzx-admin-docs",
+    "uri": "lb://liuzx-admin",
+    "order": 0,
+    "filters": [
+      {
+        "name": "RewritePath",
+        "args": {
+          "_genkey_0": "/api-gateway/admin/(?<path>v3/api-docs.*)",
+          "_genkey_1": "/${path}"
+        }
+      }
+    ],
+    "metadata": {
+      "version": "v1"
+    },
+    "predicates": [
+      {
+        "name": "Path",
+        "args": {
+          "pattern": "/api-gateway/admin/v3/api-docs/**"
+        }
+      },
+      {
+        "name": "Weight",
+        "args": {
+          "_genkey_0": "admin-docs",
+          "_genkey_1": "100"
+        }
+      }
+    ]
+  },
+  {
+    "id": "liuzx-auth",
+    "uri": "lb://liuzx-auth",
+    "predicates": [
+      {
+        "name": "Path",
+        "args": {
+          "pattern": "/api-gateway/auth/**"
+        }
+      },
+      {
+        "name": "Weight",
+        "args": {
+          "_genkey_0": "auth",
+          "_genkey_1": "100"
+        }
+      }
+    ],
+    "filters": [
+      {
+        "name": "RewritePath",
+        "args": {
+          "_genkey_0": "/api-gateway/auth/(?<path>.*)",
+          "_genkey_1": "/api/${path}"
+        }
+      }
+    ],
+    "metadata": {
+      "version": "v1"
+    },
+    "order": 1
+  },
+  {
+    "id": "liuzx-admin",
+    "uri": "lb://liuzx-admin",
+    "predicates": [
+      {
+        "name": "Path",
+        "args": {
+          "pattern": "/api-gateway/admin/**"
+        }
+      },
+      {
+        "name": "Weight",
+        "args": {
+          "_genkey_0": "admin",
+          "_genkey_1": "100"
+        }
+      }
+    ],
+    "filters": [
+      {
+        "name": "RewritePath",
+        "args": {
+          "_genkey_0": "/api-gateway/admin/(?<path>.*)",
+          "_genkey_1": "/api/${path}"
+        }
+      }
+    ],
+    "metadata": {
+      "version": "v1"
+    },
+    "order": 1
+  },
+  {
+    "id": "liuzx-ca",
+    "uri": "lb://liuzx-ca",
+    "predicates": [
+      {
+        "name": "Path",
+        "args": {
+          "pattern": "/api-gateway/ca/**"
+        }
+      },
+      {
+        "name": "Weight",
+        "args": {
+          "_genkey_0": "ca",
+          "_genkey_1": "100"
+        }
+      }
+    ],
+    "filters": [
+      {
+        "name": "RewritePath",
+        "args": {
+          "_genkey_0": "/api-gateway/ca/(?<path>.*)",
+          "_genkey_1": "/api/${path}"
+        }
+      }
+    ],
+    "metadata": {
+      "version": "v1"
+    },
+    "order": 1
+  },
+  {
+    "id": "liuzx-ca-api",
+    "uri": "lb://liuzx-ca",
+    "predicates": [
+      {
+        "name": "Path",
+        "args": {
+          "pattern": "/api/ca/**"
+        }
+      },
+      {
+        "name": "Weight",
+        "args": {
+          "_genkey_0": "ca-api",
+          "_genkey_1": "100"
+        }
+      }
+    ],
+    "filters": [
+      {
+        "name": "RewritePath",
+        "args": {
+          "_genkey_0": "/api/ca/(?<path>.*)",
+          "_genkey_1": "/api/${path}"
+        }
+      }
+    ],
+    "metadata": {
+      "version": "v1"
+    },
+    "order": 1
+  },
+  {
+    "id": "liuzx-kmc",
+    "uri": "lb://liuzx-kmc",
+    "predicates": [
+      {
+        "name": "Path",
+        "args": {
+          "pattern": "/api-gateway/kmc/**"
+        }
+      },
+      {
+        "name": "Weight",
+        "args": {
+          "_genkey_0": "kmc",
+          "_genkey_1": "100"
+        }
+      }
+    ],
+    "filters": [
+      {
+        "name": "RewritePath",
+        "args": {
+          "_genkey_0": "/api-gateway/kmc/(?<path>.*)",
+          "_genkey_1": "/api/${path}"
+        }
+      }
+    ],
+    "metadata": {
+      "version": "v1"
+    },
+    "order": 1
+  },
+  {
+    "id": "liuzx-nas",
+    "uri": "lb://liuzx-nas",
+    "predicates": [
+      {
+        "name": "Path",
+        "args": {
+          "pattern": "/api-gateway/nas/**"
+        }
+      },
+      {
+        "name": "Weight",
+        "args": {
+          "_genkey_0": "nas",
+          "_genkey_1": "100"
+        }
+      }
+    ],
+    "filters": [
+      {
+        "name": "RewritePath",
+        "args": {
+          "_genkey_0": "/api-gateway/nas/(?<path>.*)",
+          "_genkey_1": "/api/${path}"
+        }
+      }
+    ],
+    "metadata": {
+      "version": "v1"
+    },
+    "order": 1
+  },
+  {
+    "id": "liuzx-ra",
+    "uri": "lb://liuzx-ra",
+    "predicates": [
+      {
+        "name": "Path",
+        "args": {
+          "pattern": "/api-gateway/ra/**"
+        }
+      },
+      {
+        "name": "Weight",
+        "args": {
+          "_genkey_0": "ra",
+          "_genkey_1": "100"
+        }
+      }
+    ],
+    "filters": [
+      {
+        "name": "RewritePath",
+        "args": {
+          "_genkey_0": "/api-gateway/ra/(?<path>.*)",
+          "_genkey_1": "/api/${path}"
+        }
+      }
+    ],
+    "metadata": {
+      "version": "v1"
+    },
+    "order": 1
+  },
+  {
+    "id": "liuzx-ra-api",
+    "uri": "lb://liuzx-ra",
+    "predicates": [
+      {
+        "name": "Path",
+        "args": {
+          "pattern": "/api/ra/**"
+        }
+      },
+      {
+        "name": "Weight",
+        "args": {
+          "_genkey_0": "ra-api",
+          "_genkey_1": "100"
+        }
+      }
+    ],
+    "filters": [
+      {
+        "name": "RewritePath",
+        "args": {
+          "_genkey_0": "/api/ra/(?<path>.*)",
+          "_genkey_1": "/api/${path}"
+        }
+      }
+    ],
+    "metadata": {
+      "version": "v1"
+    },
+    "order": 1
+  }
+]

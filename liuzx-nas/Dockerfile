@@ -22,7 +22,10 @@ COPY doc/文件加密/Linux64/libsdhsmcrypto.so /usr/lib64/libsdhsmcrypto.so
 COPY doc/文件加密/Linux64/libsdcrypto4j.so /usr/lib/libsdcrypto4j.so
 COPY doc/文件加密/Linux64/libsdhsmcrypto.so /usr/lib/libsdhsmcrypto.so
 
-RUN chmod +x /usr/local/bin/sm4-cbc-test /usr/local/bin/decrypt-20240427-enc-test && ldconfig
+RUN chmod +x /usr/local/bin/sm4-cbc-test /usr/local/bin/decrypt-20240427-enc-test \
+    && mkdir -p /app/dir \
+    && chown -R 1002:1002 /app/dir \
+    && ldconfig
 
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8 \

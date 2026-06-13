@@ -10,6 +10,7 @@ ROOT_DIR="$(repo_root)"
 OUTPUT_DIR="$ROOT_DIR/offline-packages"
 PACKAGE_NAME="liuzx-docker-offline-$(date '+%Y%m%d%H%M%S')"
 BUILD_IMAGES=0
+CLEAN_IMAGES=0
 
 usage() {
   cat <<'EOF'
@@ -21,6 +22,7 @@ Options:
   --output DIR       Output directory. Default: ./offline-packages
   --name NAME        Package base name. Default: liuzx-docker-offline-YYYYmmddHHMMSS
   --build           Rebuild images from local Dockerfiles before saving them
+  --clean-images    Remove all local Docker images and exit
   -h, --help        Show help
 
 The package includes:
@@ -44,6 +46,10 @@ while [[ $# -gt 0 ]]; do
       BUILD_IMAGES=1
       shift
       ;;
+    --clean-images)
+      CLEAN_IMAGES=1
+      shift
+      ;;
     -h|--help)
       usage
       exit 0
@@ -55,6 +61,20 @@ while [[ $# -gt 0 ]]; do
 done
 
 require_docker
+
+if [[ "$CLEAN_IMAGES" -eq 1 ]]; then
+  mapfile -t IMAGE_IDS < <(docker image ls -aq | sort -u)
+  if [[ "${#IMAGE_IDS[@]}" -eq 0 ]]; then
+    log "no docker images to remove"
+    exit 0
+  fi
+
+  log "removing all local docker images: ${#IMAGE_IDS[@]}"
+  docker image rm -f "${IMAGE_IDS[@]}"
+  log "docker image cleanup complete"
+  exit 0
+fi
+
 compose_config_check "$ROOT_DIR"
 
 # macOS bsdtar stores Finder metadata and extended attributes as LIBARCHIVE

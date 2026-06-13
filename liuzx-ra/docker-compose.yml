@@ -1,4 +1,23 @@
 services:
+  liuzx-ra-db-init:
+    image: docker:27-cli
+    container_name: liuzx-ra-db-init
+    environment:
+      MYSQL_CONTAINER: "${RA_DB_MYSQL_CONTAINER:-liuzx-mysql}"
+      MYSQL_USER: "${RA_DB_USER:-root}"
+      MYSQL_PASSWORD: "${RA_DB_PASSWORD:-11111111}"
+      RA_DB_NAME: "${RA_DB_NAME:-lcloud_ra_4}"
+      PLATFORM_DB_NAME: "${PLATFORM_DB_NAME:-lcloud_platform_4}"
+      INIT_DIR: /ra-db-init
+    volumes:
+      - ./scripts/init-ra-db.sh:/usr/local/bin/init-ra-db.sh:ro
+      - ./mysql/init:/ra-db-init:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["/bin/sh", "/usr/local/bin/init-ra-db.sh"]
+    init: true
+    restart: "no"
+    network_mode: none
+
   liuzx-ra:
     build:
       context: .
@@ -36,6 +55,9 @@ services:
       - NACOS_PASSWORD=${NACOS_PASSWORD:-nacos}
       - SPRING_CLOUD_BOOTSTRAP_ENABLED=false
       - SPRING_CONFIG_LOCATION=file:/app/application.yml
+    depends_on:
+      liuzx-ra-db-init:
+        condition: service_completed_successfully
     volumes:
       - ./logs:/tmp
       - ./data:/home/ra/data

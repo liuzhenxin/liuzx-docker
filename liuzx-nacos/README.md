@@ -57,3 +57,7 @@ docker rm liuxx-nacos
 运行 docker-compose up -d 启动服务
 运行 docker-compose logs -f 查看实时日志
 访问 http://localhost:8848/nacos 验证服务运行状态
+
+数据库初始化说明：
+liuzx-nacos 编排中包含一次性初始化容器 liuzx-nacos-db-init，它通过 Docker socket 使用已存在的 liuzx-mysql 容器执行 SQL，执行 mysql/init/00_create_database.sql 创建 lcloud_platform_nacos_3 数据库，并在空库时执行 mysql/init/01_nacos_3_schema.sql 和 mysql/init/02_nacos_3_data.sql。
+如果数据库中已经存在表，初始化容器会跳过 SQL 导入，避免重复建表或重复插入数据。

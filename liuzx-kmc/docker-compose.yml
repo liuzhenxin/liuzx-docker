@@ -1,4 +1,22 @@
 services:
+  liuzx-kmc-db-init:
+    image: docker:27-cli
+    container_name: liuzx-kmc-db-init
+    environment:
+      MYSQL_CONTAINER: "${KMC_DB_MYSQL_CONTAINER:-liuzx-mysql}"
+      MYSQL_USER: "${KMC_DB_USER:-root}"
+      MYSQL_PASSWORD: "${KMC_DB_PASSWORD:-11111111}"
+      KMC_DB_NAME: "${KMC_DB_NAME:-lcloud_kmc_4}"
+      INIT_DIR: /kmc-db-init
+    volumes:
+      - ./scripts/init-kmc-db.sh:/usr/local/bin/init-kmc-db.sh:ro
+      - ./mysql/init:/kmc-db-init:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["/bin/sh", "/usr/local/bin/init-kmc-db.sh"]
+    init: true
+    restart: "no"
+    network_mode: none
+
   liuzx-kmc:
     build:
       context: .
@@ -25,6 +43,9 @@ services:
       - NACOS_PASSWORD=${NACOS_PASSWORD:-nacos}
       - NACOS_CLUSTER_NAME=${NACOS_CLUSTER_NAME:-pki-cluster}
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=${SPRING_KAFKA_BOOTSTRAP_SERVERS:-kafka:9092}
+    depends_on:
+      liuzx-kmc-db-init:
+        condition: service_completed_successfully
     volumes:
       - ./logs:/tmp
       - ./data:/home/kmc/data

@@ -25,6 +25,7 @@ spring:
         username: ${NACOS_USERNAME:}
         password: ${NACOS_PASSWORD:}
         group: ${NACOS_GROUP:LIUZX_GROUP}
+        cluster-name: ${NACOS_CLUSTER_NAME:pki-cluster}
       config:
         enabled: ${NACOS_CONFIG_ENABLED:false}
         server-addr: ${NACOS_ADDRESS:nacos:8848}
@@ -32,6 +33,7 @@ spring:
         username: ${NACOS_USERNAME:}
         password: ${NACOS_PASSWORD:}
         group: ${NACOS_GROUP:LIUZX_GROUP}
+        cluster-name: ${NACOS_CLUSTER_NAME:pki-cluster}
         import-check:
           enabled: false
   config:

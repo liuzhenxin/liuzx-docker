@@ -22,4 +22,8 @@ docker compose logs -f
 
 The service listens on host port `3443` by default and joins the external Docker network `pki-network`.
 
+## Database Initialization
+
+The compose file includes a one-shot `liuzx-kmc-db-init` container. It uses Docker socket access to run SQL inside the existing `liuzx-mysql` container and executes `mysql/init/00_create_database.sql` to create `lcloud_kmc_4` if it does not already exist.
+
 Do not store production database passwords, keystore passwords, KMC master keys, private keys, or PIN values in this directory.

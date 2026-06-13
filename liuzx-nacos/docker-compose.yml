@@ -1,4 +1,24 @@
 services:
+  liuzx-nacos-db-init:
+    image: docker:27-cli
+    container_name: liuzx-nacos-db-init
+    env_file:
+      - .env
+    environment:
+      MYSQL_CONTAINER: "${NACOS_DB_MYSQL_CONTAINER:-liuzx-mysql}"
+      MYSQL_USER: "${NACOS_DB_USER:-root}"
+      MYSQL_PASSWORD: "${NACOS_DB_PASSWORD:-11111111}"
+      NACOS_DB_NAME: "${NACOS_DB_NAME:-lcloud_platform_nacos_3}"
+      INIT_DIR: /nacos-db-init
+    volumes:
+      - ./scripts/init-nacos-db.sh:/usr/local/bin/init-nacos-db.sh:ro
+      - ./mysql/init:/nacos-db-init:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["/bin/sh", "/usr/local/bin/init-nacos-db.sh"]
+    init: true
+    restart: "no"
+    network_mode: none
+
   liuzx-nacos:
     build:
       context: .
@@ -18,6 +38,9 @@ services:
       - PREFER_HOST_MODE=nacos
       - JAVA_OPTS=-Xms512m -Xmx1024m -XX:+UseG1GC -XX:+UseContainerSupport -XX:MaxRAMPercentage=75 -XX:+IgnoreUnrecognizedVMOptions --add-opens=java.base/java.util=ALL-UNNAMED -Dfile.encoding=UTF-8 -Djava.security.egd=file:/dev/urandom
       - NACOS_OPTS=
+    depends_on:
+      liuzx-nacos-db-init:
+        condition: service_completed_successfully
     volumes:
       - ./logs:/tmp
       - ./data:/home/nacos/data

@@ -7,7 +7,6 @@ docker network create pki-network
 docker network ls
 
 
-
 停止所有容器‌：
 docker container stop $(docker ps -a -q)
 移除所有容器‌：

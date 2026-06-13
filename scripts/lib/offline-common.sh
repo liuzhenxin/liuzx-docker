@@ -10,6 +10,8 @@ SERVICE_DIRS=(
   liuzx-auth
   liuzx-kmc
   liuzx-ca
+  liuzx-license
+  liuzx-ocsp
   liuzx-ra
   liuzx-admin
   liuzx-gateway
@@ -22,6 +24,8 @@ APP_SERVICE_DIRS=(
   liuzx-auth
   liuzx-kmc
   liuzx-ca
+  liuzx-license
+  liuzx-ocsp
   liuzx-ra
   liuzx-admin
   liuzx-gateway
@@ -95,8 +99,15 @@ ensure_runtime_dirs() {
   nas_gid="${nas_gid:-1000}"
 
   if [[ "${EUID:-$(id -u)}" -eq 0 ]]; then
-    chown -R "$nas_uid:$nas_gid" "$root_dir/liuzx-nas/data" "$root_dir/liuzx-nas/logs" 2>/dev/null || true
-    chown -R "$nas_uid:$nas_gid" /data/static/acim2/yjhx /data/static/qcxfp/yjhx 2>/dev/null || true
+    log "setting liuzx-nas writable directory ownership to $nas_uid:$nas_gid"
+    chown "$nas_uid:$nas_gid" "$root_dir/liuzx-nas/data" "$root_dir/liuzx-nas/logs" 2>/dev/null || true
+    chown "$nas_uid:$nas_gid" /data/static/qcxfp/yjhx 2>/dev/null || true
+
+    if [[ "${NAS_CHOWN_RECURSIVE:-0}" == "1" ]]; then
+      log "recursively setting liuzx-nas target data ownership; this may take a long time"
+      chown -R "$nas_uid:$nas_gid" "$root_dir/liuzx-nas/data" "$root_dir/liuzx-nas/logs" 2>/dev/null || true
+      chown -R "$nas_uid:$nas_gid" /data/static/qcxfp/yjhx 2>/dev/null || true
+    fi
   fi
 }
 

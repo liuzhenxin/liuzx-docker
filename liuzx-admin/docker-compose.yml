@@ -1,4 +1,25 @@
 services:
+  liuzx-admin-db-init:
+    image: docker:27-cli
+    container_name: liuzx-admin-db-init
+    env_file:
+      - .env
+    environment:
+      MYSQL_CONTAINER: "${ADMIN_DB_MYSQL_CONTAINER:-liuzx-mysql}"
+      MYSQL_USER: "${ADMIN_DB_USER:-root}"
+      MYSQL_PASSWORD: "${ADMIN_DB_PASSWORD:-11111111}"
+      PLATFORM_DB_NAME: "${PLATFORM_DB_NAME:-lcloud_platform_4}"
+      PLATFORM_DOMAIN_DB_NAME: "${PLATFORM_DOMAIN_DB_NAME:-lcloud_platform_domain_4}"
+      INIT_DIR: /admin-db-init
+    volumes:
+      - ./scripts/init-admin-db.sh:/usr/local/bin/init-admin-db.sh:ro
+      - ./mysql/init:/admin-db-init:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["/bin/sh", "/usr/local/bin/init-admin-db.sh"]
+    init: true
+    restart: "no"
+    network_mode: none
+
   liuzx-admin:
     build:
       context: .
@@ -13,6 +34,9 @@ services:
       - LANG=zh_CN.UTF-8
       - TZ=Asia/Shanghai
       - JVM_OPTS=-Xms512m -Xmx512m -Xmn256m
+    depends_on:
+      liuzx-admin-db-init:
+        condition: service_completed_successfully
     volumes:
       - ./logs:/tmp
       - ./data:/home/admin/data

@@ -1,0 +1,88 @@
+server:
+  port: ${SERVER_PORT:10444}
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: ${SERVICE_ID:liuzx-ocsp}
+  profiles:
+    active: docker
+  cloud:
+    nacos:
+      discovery:
+        enabled: ${NACOS_DISCOVERY_ENABLED:false}
+        server-addr: ${NACOS_ADDRESS:nacos:8848}
+        namespace: ${NACOS_NAMESPACE:}
+        username: ${NACOS_USERNAME:}
+        password: ${NACOS_PASSWORD:}
+        group: ${NACOS_GROUP:LIUZX_GROUP}
+        cluster-name: ${NACOS_CLUSTER_NAME:pki-cluster}
+      config:
+        enabled: ${NACOS_CONFIG_ENABLED:false}
+        server-addr: ${NACOS_ADDRESS:nacos:8848}
+        namespace: ${NACOS_NAMESPACE:}
+        username: ${NACOS_USERNAME:}
+        password: ${NACOS_PASSWORD:}
+        group: ${NACOS_GROUP:LIUZX_GROUP}
+        cluster-name: ${NACOS_CLUSTER_NAME:pki-cluster}
+        import-check:
+          enabled: false
+  config:
+    import: []
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST:mysql}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:lcloud_ocsp}?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:}
+  liquibase:
+    enabled: ${LIQUIBASE_ENABLED:true}
+    change-log: classpath:changelog/db.changelog-master.xml
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*Mapper.xml
+  type-aliases-package: org.liuzx.ocsp.infrastructure.**.dataobject
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: delFlag
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    root: INFO
+    org.liuzx.ocsp: INFO
+    org.springframework.web: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /doc.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  info:
+    title: LiuZX OCSP API
+    description: OCSP (Online Certificate Status Protocol) 服务 API 文档
+    version: ${LIUZX_OCSP_VERSION:4.0.1-SNAPSHOT}
+    contact:
+      name: liuzx
+      email: liuzhenxin1977@gmail.com

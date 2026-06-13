@@ -1,4 +1,23 @@
 services:
+  liuzx-ca-db-init:
+    image: docker:27-cli
+    container_name: liuzx-ca-db-init
+    environment:
+      MYSQL_CONTAINER: "${CA_DB_MYSQL_CONTAINER:-liuzx-mysql}"
+      MYSQL_USER: "${CA_DB_USER:-root}"
+      MYSQL_PASSWORD: "${CA_DB_PASSWORD:-11111111}"
+      CA_DB_NAME: "${CA_DB_NAME:-lcloud_ca_4}"
+      PLATFORM_DB_NAME: "${PLATFORM_DB_NAME:-lcloud_platform_4}"
+      INIT_DIR: /ca-db-init
+    volumes:
+      - ./scripts/init-ca-db.sh:/usr/local/bin/init-ca-db.sh:ro
+      - ./mysql/init:/ca-db-init:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["/bin/sh", "/usr/local/bin/init-ca-db.sh"]
+    init: true
+    restart: "no"
+    network_mode: none
+
   liuzx-ca:
     build:
       context: .
@@ -14,6 +33,9 @@ services:
       - TZ=Asia/Shanghai
       - JAVA_OPTS=-Xms512m -Xmx512m -Xmn256m
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    depends_on:
+      liuzx-ca-db-init:
+        condition: service_completed_successfully
     volumes:
       - ./logs:/tmp
       - ./data:/home/ca/data

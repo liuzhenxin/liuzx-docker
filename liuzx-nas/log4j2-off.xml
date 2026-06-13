@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="OFF">
+  <Appenders>
+    <Null name="null"/>
+  </Appenders>
+  <Loggers>
+    <Root level="OFF">
+      <AppenderRef ref="null"/>
+    </Root>
+  </Loggers>
+</Configuration>

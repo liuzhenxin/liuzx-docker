@@ -1,4 +1,22 @@
 services:
+  liuzx-nas-db-init:
+    image: docker:27-cli
+    container_name: liuzx-nas-db-init
+    environment:
+      MYSQL_CONTAINER: "${NAS_DB_MYSQL_CONTAINER:-liuzx-mysql}"
+      MYSQL_USER: "${NAS_DB_USER:-root}"
+      MYSQL_PASSWORD: "${NAS_DB_PASSWORD:-11111111}"
+      NAS_DB_NAME: "${NAS_DB_NAME:-lcloud_nas_4}"
+      INIT_DIR: /nas-db-init
+    volumes:
+      - ./scripts/init-nas-db.sh:/usr/local/bin/init-nas-db.sh:ro
+      - ./mysql/init:/nas-db-init:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["/bin/sh", "/usr/local/bin/init-nas-db.sh"]
+    init: true
+    restart: "no"
+    network_mode: none
+
   liuzx-nas:
     build:
       context: .
@@ -13,24 +31,27 @@ services:
     environment:
       - LANG=zh_CN.UTF-8
       - TZ=Asia/Shanghai
-      - JAVA_OPTS=-Xms512m -Xmx512m -Xmn256m
+      - JAVA_OPTS=-Xms512m -Xmx512m -Xmn256m -Dlog4j.configurationFile=/app/log4j2-off.xml
       - SERVER_PORT=6443
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     volumes:
-      - ./logs:/tmp
+      - ./log4j2-off.xml:/app/log4j2-off.xml:ro
+      - ./hsm/sdhsm.ini:/app/sdhsm.ini:ro
       - ./data:/home/nas/data
       - /Users/liuzhenxin/20240427:/Users/liuzhenxin/20240427:ro
       - /Users/liuzhenxin/20240427-enc:/Users/liuzhenxin/20240427-enc:rw
       - /Users/liuzhenxin/20240427-dec-test:/Users/liuzhenxin/20240427-dec-test:rw
       - /data/static/acim2/yjhx:/data/static/acim2/yjhx:rw
       - /data/static/qcxfp/yjhx:/data/static/qcxfp/yjhx:rw
+    tmpfs:
+      - /tmp:size=512m,mode=1777
+    depends_on:
+      liuzx-nas-db-init:
+        condition: service_completed_successfully
     init: true
     restart: unless-stopped
     logging:
-      driver: json-file
-      options:
-        max-size: "50m"
-        max-file: "3"
+      driver: none
     healthcheck:
       test: ["CMD-SHELL", "bash -c ': > /dev/tcp/127.0.0.1/6443'"]
       interval: 30s
