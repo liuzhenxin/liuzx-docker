@@ -7,6 +7,7 @@ SERVICE_DIRS=(
   redis8
   kafka
   liuzx-nacos
+  liuzx-snowflake-id
   liuzx-auth
   liuzx-kmc
   liuzx-ca
@@ -21,6 +22,7 @@ SERVICE_DIRS=(
 
 APP_SERVICE_DIRS=(
   liuzx-nacos
+  liuzx-snowflake-id
   liuzx-auth
   liuzx-kmc
   liuzx-ca

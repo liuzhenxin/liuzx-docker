@@ -24,10 +24,10 @@ offline-packages/liuzx-docker-offline-YYYYmmddHHMMSS.tar.gz
 
 离线包包含：
 
-- 所有 compose 配置、Dockerfile、`.env`
+- 所有 compose 配置、Dockerfile、`.env`（含 license 的 `docker-compose.override.yml`）
 - Java 服务 JAR、UI `dist`、nginx 配置
 - NAS 所需 HSM 库和测试脚本
-- MySQL 初始化 SQL
+- 各服务 MySQL 初始化 SQL
 - 所有 compose 需要的 Docker 镜像 tar
 - 离线安装和管理脚本
 
@@ -37,6 +37,29 @@ offline-packages/liuzx-docker-offline-YYYYmmddHHMMSS.tar.gz
 - `logs/`
 - `backups/`
 - `.git/`
+
+## 1.1 服务清单
+
+| 服务 | 端口 | 说明 |
+|------|------|------|
+| liuzx-mysql | 3306 | MySQL 8.0 数据库 |
+| liuzx-redis | 6379 | Redis 8.2 缓存 |
+| liuzx-kafka | 19092 | Kafka 消息队列 (KRaft) |
+| liuzx-kafka-ui | 8080 | Kafka 管理界面 |
+| liuzx-nacos | 8848/8048/9848 | 服务注册/配置中心 |
+| liuzx-snowflake-id | 9094/19094 | 分布式 ID 生成 (HTTP/gRPC) |
+| liuzx-auth | 1111 | OAuth2 认证服务 |
+| liuzx-admin | 9990 | 平台管理服务 |
+| liuzx-gateway | 5555 | API 网关 |
+| liuzx-kmc | 3443 | 密钥管理中心 |
+| liuzx-ca | 4443 | 证书签发服务 |
+| liuzx-license | 1443 | 许可证管理服务 |
+| liuzx-ocsp | 6960 | OCSP 在线证书状态查询 |
+| liuzx-ra | 5443 | 注册审核服务 |
+| liuzx-nas | 6443 | 文件安全迁移服务 |
+| liuzx-ui | 80 | 前端界面 |
+
+> 注：`liuzx-license` 的 RSA 签名密钥通过 `docker-compose.override.yml` 注入，不放在主 compose 文件中。`liuzx-nas` 依赖 `liuzx-snowflake-id` 的 gRPC 接口（:19094）生成迁移失败记录主键。
 
 ## 2. 传输到离线服务器
 

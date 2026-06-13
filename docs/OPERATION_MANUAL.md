@@ -20,9 +20,12 @@
 - `liuzx-ca`
 - `liuzx-gateway`
 - `liuzx-kmc`
+- `liuzx-license`
 - `liuzx-nacos`
 - `liuzx-nas`
+- `liuzx-ocsp`
 - `liuzx-ra`
+- `liuzx-snowflake-id`
 - `liuzx-ui`
 
 基础设施服务：
@@ -31,6 +34,42 @@
 - `liuzx-redis`
 - `liuzx-kafka`
 - `liuzx-kafka-ui`
+
+## 2.1 服务启动顺序
+
+按依赖关系分层启动：
+
+```
+第一层 - 基础设施：
+  mysql8 → redis8 → kafka
+
+第二层 - 服务发现：
+  liuzx-nacos（依赖 mysql8）
+
+第三层 - 平台服务：
+  liuzx-snowflake-id  （Nacos、Kafka）
+  liuzx-auth          （Nacos）
+  liuzx-admin         （MySQL、Nacos）
+  liuzx-gateway       （Nacos、Redis、Kafka）
+  liuzx-kmc           （MySQL、Nacos、Kafka）
+  liuzx-ca            （MySQL、Nacos、Kafka）
+  liuzx-license       （Nacos、Redis、Kafka）
+  liuzx-ocsp          （MySQL、Nacos）
+  liuzx-ra            （MySQL、Redis、Nacos、Kafka）
+
+第四层 - 业务服务：
+  liuzx-nas           （MySQL、Nacos、Kafka、HSM 硬件）
+
+第五层 - 前端：
+  liuzx-ui            （nginx 反代 → gateway + license）
+```
+
+关键依赖说明：
+
+- **Nacos** 是中心服务注册/配置中心，所有业务服务均依赖它。
+- **NAS** 依赖 `liuzx-snowflake-id` 的 gRPC 接口（:19094）生成迁移失败记录主键，缺失会导致 `B_Service_GenerateSnowflakeIdNotFound` 错误。
+- **license** 使用 RSA 密钥对签发许可证，密钥通过 `docker-compose.override.yml` 注入，不与主 compose 文件混合。
+- **ocsp** 默认关闭 Nacos 注册/配置，使用外部 `application.yml` 独立配置数据源。
 
 默认 Docker 网络：
 
@@ -66,6 +105,7 @@ pki-network
 ```text
 80      liuzx-ui
 1111    liuzx-auth
+1443    liuzx-license
 3443    liuzx-kmc
 4443    liuzx-ca
 5443    liuzx-ra
@@ -74,6 +114,9 @@ pki-network
 8048    liuzx-nacos
 8848    liuzx-nacos
 9848    liuzx-nacos
+9094    liuzx-snowflake-id (HTTP)
+6960    liuzx-ocsp
+19094   liuzx-snowflake-id (gRPC)
 3306    liuzx-mysql
 6379    liuzx-redis
 8080    liuzx-kafka-ui
@@ -603,11 +646,12 @@ ls -ln /data/static/qcxfp/yjhx
 
 - Docker 服务运行正常
 - `pki-network` 已存在
-- 13 个容器均已启动
+- 16 个容器均已启动
 - 除 `liuzx-kafka-ui` 外，其它带健康检查的容器均为 `healthy`
 - UI 端口 `80` 可访问
 - Nacos 端口 `8048/8848/9848` 可访问
 - MySQL、Redis、Kafka 容器状态正常
+- `liuzx-snowflake-id` gRPC 端口 `19094` 可通（NAS 迁移失败记录依赖）
 - 业务服务日志无持续启动失败异常
 - 已完成首次备份
 

@@ -8,12 +8,12 @@ services:
     env_file:
       - .env
     ports:
-      - "${OCSP_PORT:-10444}:10444"
+      - "${OCSP_PORT:-6960}:6960"
     environment:
       - LANG=zh_CN.UTF-8
       - TZ=Asia/Shanghai
       - JAVA_OPTS=${JAVA_OPTS:--Xms512m -Xmx1024m -Xmn256m}
-      - SERVER_PORT=10444
+      - SERVER_PORT=6960
       - SERVICE_ID=liuzx-ocsp
       - NODE_ID=${NODE_ID:-1}
       - MYSQL_HOST=${MYSQL_HOST:-mysql}
@@ -43,7 +43,7 @@ services:
         max-size: "50m"
         max-file: "3"
     healthcheck:
-      test: ["CMD-SHELL", "bash -c ': > /dev/tcp/127.0.0.1/10444'"]
+      test: ["CMD-SHELL", "bash -c ': > /dev/tcp/127.0.0.1/6960'"]
       interval: 30s
       timeout: 10s
       retries: 3

@@ -70,6 +70,8 @@ PKI 业务服务：
 ```text
 liuzx-ca
 liuzx-kmc
+liuzx-license
+liuzx-ocsp
 liuzx-ra
 liuzx-nas
 ```
@@ -225,6 +227,8 @@ docker exec liuzx-mysql mysqldump -uroot -p --databases \
   lcloud_kmc_4 \
   lcloud_ra_4 \
   lcloud_nas_4 \
+  lcloud_license_4 \
+  lcloud_ocsp \
   > /tmp/liuzx-db-backup-$(date +%Y%m%d%H%M%S).sql
 ```
 
@@ -361,6 +365,12 @@ docker compose up -d --no-build
 cd /opt/liuzx-docker/liuzx-kmc
 docker compose up -d --no-build
 
+cd /opt/liuzx-docker/liuzx-license
+docker compose up -d --no-build
+
+cd /opt/liuzx-docker/liuzx-ocsp
+docker compose up -d --no-build
+
 cd /opt/liuzx-docker/liuzx-ra
 docker compose up -d --no-build
 
@@ -387,6 +397,8 @@ cd /opt/liuzx-docker
 docker logs --tail 200 liuzx-nacos
 docker logs --tail 200 liuzx-snowflake-id
 docker logs --tail 200 liuzx-gateway
+docker logs --tail 200 liuzx-license
+docker logs --tail 200 liuzx-ocsp
 docker logs --tail 200 liuzx-nas
 docker logs --tail 200 liuzx-ui
 ```
@@ -423,6 +435,24 @@ docker exec liuzx-nas bash -lc '(echo >/dev/tcp/liuzx-snowflake-id/19094) >/dev/
 
 ```text
 snowflake_grpc_ok
+```
+
+验证 license 服务：
+
+```bash
+curl -I http://127.0.0.1:1443/
+```
+
+验证 OCSP 服务：
+
+```bash
+curl -I http://127.0.0.1:6960/
+```
+
+验证 license 通过网关的路由（未登录返回正常 HTTP 响应即表示服务已通）：
+
+```bash
+curl -i http://127.0.0.1/prod-api/license/v1/health
 ```
 
 ## 15. Nacos 路由配置检查
