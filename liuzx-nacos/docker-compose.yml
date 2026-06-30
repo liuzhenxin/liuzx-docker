@@ -37,7 +37,9 @@ services:
       - MODE=standalone
       - PREFER_HOST_MODE=nacos
       - JAVA_OPTS=-Xms512m -Xmx1024m -XX:+UseG1GC -XX:+UseContainerSupport -XX:MaxRAMPercentage=75 -XX:+IgnoreUnrecognizedVMOptions --add-opens=java.base/java.util=ALL-UNNAMED -Dfile.encoding=UTF-8 -Djava.security.egd=file:/dev/urandom
+      - JVM_OPTS=-Xms512m -Xmx1024m -XX:+UseG1GC -XX:+UseContainerSupport -XX:MaxRAMPercentage=75 -XX:+IgnoreUnrecognizedVMOptions --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED -Dfile.encoding=UTF-8 -Djava.security.egd=file:/dev/urandom
       - NACOS_OPTS=
+      - DB_PASSWORD_0=${NACOS_DB_PASSWORD:-11111111}
     depends_on:
       liuzx-nacos-db-init:
         condition: service_completed_successfully

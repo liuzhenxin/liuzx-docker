@@ -48,7 +48,7 @@ services:
       - /tmp:size=512m,mode=1777
     depends_on:
       liuzx-nas-db-init:
-        condition: service_completed_successfully
+        condition: service_started
     init: true
     restart: unless-stopped
     logging:

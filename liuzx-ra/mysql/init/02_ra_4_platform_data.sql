@@ -3,7 +3,7 @@
 
  说明: 初始化 RA 租户、菜单权限、角色、admin/audit 基础用户及授权关系
  执行方式:
- mysql -u root -p lcloud_platform_4 < 03_ra_4_platform_data.sql
+ mysql -u root -p lcloud_platform_4 < 02_ra_4_platform_data.sql
 */
 
 SET NAMES utf8mb4;
@@ -43,7 +43,7 @@ INSERT INTO `sys_tenant` (
   `source_id`,
   `package_id`
 ) VALUES
-  (5,501,501,'2024-05-15 14:42:36','2026-06-04 09:20:41',0,39,5,'注册认证中心','ra',-1,5,5);
+  (5,501,NULL,'2024-05-15 14:42:36',NULL,0,1,5,'注册认证中心','ra',0,5,5);
 
 -- ----------------------------
 -- sys_dept (部门)
@@ -93,7 +93,7 @@ INSERT INTO `sys_menu` (
   `icon`,
   `remark`
 ) VALUES
-  (5000,501,NULL,'2025-01-01 00:00:00',NULL,0,0,5,1,'setup','C','安装向导',1,'setup','ra/init/index','',1,0,'0','0','tree-table','安装向导菜单'),
+  (5000,501,NULL,'2025-01-01 00:00:00',NULL,0,0,5,0,'setup','C','安装向导',1,'ra/setup','ra/init/index','',1,0,'0','0','tree-table','安装向导菜单'),
   (5010,501,NULL,'2025-01-01 00:00:00',NULL,0,0,5,0,'','M','证书业务',3010,'ra-certificate','','',1,0,'0','0','cert','证书管理目录'),
   (5011,501,NULL,'2025-01-01 00:00:00',NULL,0,0,5,5010,'ra:apply','C','证书申请',1,'ra-cert-apply','ra/apply/index','',1,0,'0','0','key','证书申请菜单'),
   (5012,501,NULL,'2025-01-01 00:00:00',NULL,0,0,5,5010,'ra:cert','C','证书查询',2,'ra-cert-list','ra/cert/index','',1,0,'0','0','search','证书列表菜单'),

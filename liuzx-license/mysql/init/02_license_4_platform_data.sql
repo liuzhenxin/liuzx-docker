@@ -16,6 +16,21 @@
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- Clean License/HSM seed data before re-importing. This keeps the script
+-- repeatable after a partial failed import.
+DELETE FROM `sys_role_menu` WHERE `tenant_id` = 2 AND (`role_id` = 201 OR `menu_id` BETWEEN 1000 AND 2008);
+DELETE FROM `sys_user_role` WHERE `tenant_id` = 2 AND (`id` = 201 OR `user_id` = 201 OR `role_id` = 201);
+DELETE FROM `sys_role_dept` WHERE `tenant_id` = 2 AND (`id` = 201 OR `role_id` = 201 OR `dept_id` = 201);
+DELETE FROM `sys_dict_item` WHERE `tenant_id` = 2 AND (`id` BETWEEN 2011 AND 2022 OR `type_id` = 201);
+DELETE FROM `sys_dict` WHERE `tenant_id` = 2 AND `id` = 201;
+DELETE FROM `sys_config` WHERE `tenant_id` = 1 AND `id` BETWEEN 21 AND 26;
+DELETE FROM `sys_role` WHERE `tenant_id` = 2 AND `id` = 201;
+DELETE FROM `sys_user` WHERE `tenant_id` = 2 AND `id` = 201;
+DELETE FROM `sys_menu` WHERE `id` BETWEEN 1000 AND 2008;
+DELETE FROM `sys_dept` WHERE `tenant_id` = 2 AND `id` = 201;
+DELETE FROM `sys_tenant` WHERE `id` = 2 OR `tenant_id` = 2;
+
 -- ----------------------------
 -- Records of sys_tenant 租户ID：2
 -- ----------------------------
@@ -23,7 +38,7 @@ BEGIN;
 INSERT INTO `sys_tenant`
     (`id`, `creator`, `editor`, `create_time` 	   	, `update_time`, `del_flag`, `version`, `tenant_id`, `name`	, `code`  , `status`, `source_id`, `package_id`)
 VALUES
-    (2	 , 201		, NULL	  , '2024-05-15 14:42:36', NULL		   , 0		  , 1		 , 2   		  , '授权系统'	, 'license'   , 0		, 2		   , 1);
+    (2	 , 201		, NULL	  , '2024-05-15 14:42:36', NULL		   , 0		  , 1		 , 2   		  , '授权系统'	, 'license'   , -1		, 2		   , 1);
 COMMIT;
 
 -- ----------------------------
@@ -166,9 +181,9 @@ VALUES
 -- ----------------------------
 BEGIN;
 INSERT INTO `sys_user`
-(`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `password`                                                            , `super_admin`, `mail`                                        						   , `mobile`                  							   , `status`, `avatar`, `serial_number`, `cert_pem`,`username_phrase`,`mail_phrase`,`mobile_phrase`, `username`)
+(`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `dept_id`, `password`                                                            , `super_admin`, `mail`                                        						   , `mobile`                  							   , `status`, `avatar`, `cert_sn`, `cert_pem`,`username_phrase`,`mail_phrase`,`mobile_phrase`, `username`)
 VALUES
-    (201 , 201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , '{bcrypt}$2a$10$Z42xytAkdV34Ta5YM0D9EuB9y1YrfYhDeJa38BMtSA0PaoGxGPB/q', 0            , 'Ylh4QTF0YmdEWWJRh2xUL2ADuvSdlf7gLJTyjR0zFujLE06Htlzb4WJh+K9tuEuoooo=', 'Ylh4QTF0YmdEWWJR2jAZZDhR7brNzIiSHR1E9jPh2KldKbhoC83k', 0       , NULL    , NULL           , NULL      ,NULL             ,NULL         ,NULL           , 'Ylh4QTF0YmdEWWJRimFMPGaJmldyuWIb9BNmUN1ULMI7');
+    (201 , 201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201      , '{bcrypt}$2a$10$Z42xytAkdV34Ta5YM0D9EuB9y1YrfYhDeJa38BMtSA0PaoGxGPB/q', 0            , 'Ylh4QTF0YmdEWWJRh2xUL2ADuvSdlf7gLJTyjR0zFujLE06Htlzb4WJh+K9tuEuoooo=', 'Ylh4QTF0YmdEWWJR2jAZZDhR7brNzIiSHR1E9jPh2KldKbhoC83k', 0       , NULL    , NULL           , NULL      ,NULL             ,NULL         ,NULL           , 'Ylh4QTF0YmdEWWJRimFMPGaJmldyuWIb9BNmUN1ULMI7');
 COMMIT;
 
 -- ----------------------------
@@ -190,272 +205,272 @@ BEGIN;
 -- HSM管理员角色菜单
 -- 初始化
 INSERT INTO `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (2   , 201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1);
+    (201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1);
 
 -- -- 系统管理 -- 字典管理
 INSERT INTO `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (28   , 201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 28);
+    (201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 28);
 -- 系统管理 -- 字典管理 -- 查询字典列表
 INSERT INTO `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (281   , 201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 281);
+    (201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 281);
 -- 系统管理 -- 字典管理 -- 保存字典
 INSERT INTO `sys_role_menu`
-(`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+(`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (282   , 201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 282);
+    (201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 282);
 -- 系统管理 -- 字典管理 -- 修改字典
 INSERT INTO `sys_role_menu`
-(`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+(`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (283   , 201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 283);
+    (201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 283);
 -- 系统管理 -- 字典管理 -- 删除字典
 INSERT INTO `sys_role_menu`
-(`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+(`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (284   , 201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 284);
+    (201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 284);
 -- 系统管理 -- 字典项管理 -- 分页查询字典项列表
 INSERT INTO `sys_role_menu`
-(`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+(`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (285   , 201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 285);
+    (201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 285);
 -- 系统管理 -- 字典项管理 -- 保存字典项
 INSERT INTO `sys_role_menu`
-(`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+(`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (286   , 201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 286);
+    (201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 286);
 -- 系统管理 -- 字典项管理 -- 修改字典项
 INSERT INTO `sys_role_menu`
-(`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+(`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (287   , 201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 287);
+    (201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 287);
 -- 系统管理 -- 字典项管理 -- 删除字典项
 INSERT INTO `sys_role_menu`
-(`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+(`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (288   , 201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 288);
+    (201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 288);
 -- 系统管理 -- 字典项管理 -- 字典类型查询字典项
 INSERT INTO `sys_role_menu`
-(`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+(`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (289   , 201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 289);
+    (201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 289);
 -- 初始化 -- HSM安装向导
 INSERT INTO `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (1000   , 201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1000);
+    (201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1000);
 -- -- 系统管理 -- 租户管理 -- 修改租户
 INSERT INTO `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (1001   , 201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 243);
+    (201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 243);
 -- -- 系统管理 -- 用户管理 -- 修改用户
 INSERT INTO `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (1002   , 201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 223);
+    (201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 223);
 -- 设备管理
 INSERT INTO `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (1010   , 201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1010);
+    (201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1010);
 -- 设备管理 -- 设备信息
 INSERT INTO `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (1011   , 201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1011);
+    (201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1011);
 -- 设备管理 -- 设备服务
 INSERT INTO `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (1012   , 201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1012);
+    (201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1012);
 -- 设备管理 -- 设备自检
 INSERT INTO `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (1013   , 201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1013);
+    (201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1013);
 -- 系统配置
 INSERT INTO `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (1020   , 201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1020);
+    (201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1020);
 -- 系统配置 -- 系统时间
 INSERT INTO `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (1021   , 201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1021);
+    (201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1021);
 -- 系统配置 -- 网络配置
 INSERT INTO `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (1022   , 201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1022);
+    (201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1022);
 -- 系统权限
 INSERT INTO `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (1030   , 201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1030);
+    (201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1030);
 -- 系统权限 -- 认证信息
 INSERT INTO `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (1031   , 201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1031);
+    (201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1031);
 -- 系统权限 -- 管理员管理
 INSERT INTO `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (1032   , 201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1032);
+    (201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1032);
 -- 系统权限 -- 操作员管理
 INSERT INTO `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (1033   , 201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1033);
+    (201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1033);
 -- 系统权限 -- 审计员管理
 INSERT INTO `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (1034   , 201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1034);
+    (201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1034);
 -- 密钥管理
 INSERT INTO `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (1040   , 201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1040);
+    (201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1040);
 -- 密钥管理 -- 主密钥管理
 INSERT INTO `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 VALUES
-    (1041   , 201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1041);
+    (201	 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 1041);
 -- 密钥管理 -- 对称密钥管理
 insert into `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (1042   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1042);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1042);
 -- 密钥管理 -- RSA密钥管理
 insert into `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (1043   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1043);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1043);
 -- 密钥管理 -- SM2密钥管理
 insert into `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (1044   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1044);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1044);
 -- 密钥管理 -- ECC密钥管理
 insert into `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (1045   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1045);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1045);
 -- 密钥管理 -- DSA密钥管理
 insert into `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (1046   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1046);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1046);
 -- 密钥管理 -- EcDSA密钥管理
 insert into `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (1047   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1047);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1047);
 -- 密钥管理 -- EdDSA密钥管理
 insert into `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (1048   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1048);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1048);
 -- 密钥管理 -- SM9主密钥管理
 insert into `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (1049   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1049);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1049);
 -- 密钥管理 -- SM9用户密钥管理
 insert into `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (1050   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1050);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1050);
 -- 密钥管理 -- 密钥备份
 insert into `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (1051   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1051);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1051);
 -- 密钥管理 -- 密钥恢复
 insert into `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (1052   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1052);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1052);
 
 -- 服务管理
 insert into `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (1060   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1060);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1060);
 COMMIT;
 -- 服务管理-- 服务状态
 insert into `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (1061   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1061);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1061);
 COMMIT;
 -- 服务管理-- 服务配置
 insert into `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (1062   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1062);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1062);
 COMMIT;
 -- 服务管理-- 白名单管理
 insert into `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (1063   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1063);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1063);
 
 -- 网络管理
 insert into `sys_role_menu`
-(`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+(`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (1080   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1080);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1080);
 -- 网络管理 -- 配置网络
 insert into `sys_role_menu`
-(`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+(`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (1081   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1081);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1081);
 -- 网络管理 -- 网络诊断
 insert into `sys_role_menu`
-(`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+(`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (1082   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1082);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1082);
 -- 网络管理 -- 时间源
 insert into `sys_role_menu`
-(`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+(`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (1083   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1083);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 1083);
 
 -- 审计管理
 insert into `sys_role_menu`
-(`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+(`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (10000   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 10000);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 10000);
 -- 审计管理 -- 登录日志
 insert into `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (10010   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 10010);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 10010);
 -- -- 审计管理 -- 登录日志 -- 查询登录日志列表
 insert into `sys_role_menu`
-    (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+    (`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (10011   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 10011);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 10011);
 
 -- 审计管理 -- 操作日志
 insert into `sys_role_menu`
-(`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+(`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (10020   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 10020);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 10020);
 -- -- 审计管理 -- 操作日志 -- 查询操作日志列表
 insert into `sys_role_menu`
-(`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
+(`creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `menu_id`)
 values
-    (10021   , 201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 10021);
+    (201	 , null    , '2025-01-01 00:00:00', null         , 0        , 0        , 2          , 201		   , 10021);
 
 
 COMMIT;
@@ -467,7 +482,7 @@ BEGIN;
 INSERT INTO `sys_role_dept`
     (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `role_id`, `dept_id`)
 VALUES
-    (1   , 201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 201);
+    (201 , 201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201		   , 201);
 
 COMMIT;
 
@@ -479,7 +494,7 @@ BEGIN;
 INSERT INTO `sys_user_role`
     (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `user_id`, `role_id`)
 VALUES
-    (1   , 201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201	  ,201);
+    (201 , 201		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 2          , 201	  ,201);
 
 COMMIT;
 

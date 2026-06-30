@@ -3,7 +3,7 @@
 
  说明: 初始化一条 RA 默认证书策略，适用于所有证书模板
  执行方式:
- mysql -u root -p lcloud_ra_4 < 02_ra_4_data.sql
+ mysql -u root -p lcloud_ra_4 < 03_ra_4_data.sql
 */
 
 SET NAMES utf8mb4;

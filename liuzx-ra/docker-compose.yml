@@ -54,14 +54,12 @@ services:
       - NACOS_USERNAME=${NACOS_USERNAME:-nacos}
       - NACOS_PASSWORD=${NACOS_PASSWORD:-nacos}
       - SPRING_CLOUD_BOOTSTRAP_ENABLED=false
-      - SPRING_CONFIG_LOCATION=file:/app/application.yml
     depends_on:
       liuzx-ra-db-init:
-        condition: service_completed_successfully
+        condition: service_started
     volumes:
       - ./logs:/tmp
       - ./data:/home/ra/data
-      - ./application.yml:/app/application.yml:ro
     init: true
     restart: unless-stopped
     logging:

@@ -14,6 +14,6 @@ ENV LANG=C.UTF-8 \
     SPRING_CONFIG_LOCATION="file:/app/application.yml" \
     SPRING_CLOUD_BOOTSTRAP_ENABLED="false"
 
-EXPOSE 10444
+EXPOSE 6960
 
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

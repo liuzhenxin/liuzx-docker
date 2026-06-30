@@ -2,17 +2,14 @@
  LiuZX KMC 数据库初始化数据脚本
 
  版本: 4.1.2
- 日期: 2026-05-02
+ 日期: 2026-06-30
  说明: 初始化 KMC 租户、部门、用户、角色、菜单和权限数据
-
- 执行方式:
- mysql -u root -p lcloud_platform_4 < 02_kmc_4_data.sql
+       （已吸收签名权限点 + 安装向导菜单结构）
 
  注意:
  1. 此脚本写入平台库 lcloud_platform_4，不写入 KMC 业务库
  2. 需要先执行 liuzx-admin 的数据库脚本
  3. 租户ID为3，用于 KMC 密钥管理中心
- 4. 默认账号密码沿用平台初始化约定，生产环境必须首次登录后修改
 */
 
 SET NAMES utf8mb4;
@@ -37,7 +34,7 @@ DELETE FROM `sys_tenant` WHERE `id` = 3;
 -- 1. sys_tenant (租户)
 -- ----------------------------
 INSERT INTO `sys_tenant` (`id`, `creator`, `create_time`, `tenant_id`, `name`, `code`, `status`, `source_id`, `package_id`)
-VALUES (3, 301, '2024-05-15 14:42:36', 3, '密钥管理中心', 'kmc', -1, 3, 3);
+VALUES (3, 301, '2024-05-15 14:42:36', 3, '密钥管理中心', 'kmc', 0, 3, 3);
 
 -- ----------------------------
 -- 2. sys_dept (部门)
@@ -48,7 +45,7 @@ VALUES (301, 0, '总部', '0,301', 0, 3);
 -- ----------------------------
 -- 3. sys_menu (菜单及按钮)
 -- ID 码段:
--- 3000      安装向导
+-- 3000-3001 初始化菜单
 -- 3010-3019 密钥管理菜单
 -- 3020-3029 安全管理菜单
 -- 3030-3039 审计员管理菜单
@@ -61,9 +58,13 @@ VALUES (301, 0, '总部', '0,301', 0, 3);
 -- 3401-3499 安全管理/测试按钮
 -- ----------------------------
 
+-- [3001] 初始化 (目录)
+INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES
+(3001, 0, '初始化', '', 'M', 0, 'kmc', '', 0, 0, '1', '0', 'guide', 3, '初始化目录');
+
 -- [3000] 安装向导
 INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES
-(3000, 1, '安装向导', 'kmc:setup', 'C', 1, 'setup', 'kmc/init/index', 1, 0, '0', '0', 'tree-table', 3, '安装向导');
+(3000, 3001, '安装向导', 'setup', 'C', 1, 'setup', 'kmc/init/index', 0, 0, '1', '0', 'guide', 3, '安装向导');
 
 -- [3010] 密钥管理
 INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES
@@ -172,7 +173,7 @@ INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `tena
 -- [3030] 审计员管理
 INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES
 (3030, 0, '审计员管理', '', 'M', 3030, 'kmc-audit-manager', '', 1, 0, '0', '0', 'user', 3, '审计员管理目录'),
-(3031, 3030, '审计员', 'sys:user:page', 'C', 1, 'kmc-audit', 'kmc/audit/index', 1, 0, '1', '1', '', 3, '审计员');
+(3031, 3030, '审计员', 'kmc:audit', 'C', 1, 'kmc-audit', 'kmc/audit/index', 1, 0, '0', '0', '', 3, '审计员');
 
 -- [3040] 司法取证管理
 INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES
@@ -211,8 +212,8 @@ INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `tena
 -- [3060] 审计日志
 INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES
 (3060, 0, '审计日志', '', 'M', 3060, 'kmc-log', '', 1, 0, '0', '0', 'documentation', 3, '审计日志目录'),
-(3061, 3060, '登录日志', 'kmc:log:login', 'C', 1, 'kmc-log-login', 'kmc/log/login/index', 1, 0, '1', '1', '', 3, '登录日志'),
-(3062, 3060, '业务日志', 'kmc:log:operator', 'C', 2, 'kmc-log-operator', 'kmc/log/operator/index', 1, 0, '1', '1', '', 3, '业务日志');
+(3061, 3060, '登录日志', 'sys:login-log:page', 'C', 1, 'kmc-log-login', 'monitor/logininfor/index', 1, 0, '1', '1', '', 3, '登录日志'),
+(3062, 3060, '业务日志', 'sys:operate-log:page', 'C', 2, 'kmc-log-operator', 'monitor/operlog/index', 1, 0, '1', '1', '', 3, '业务日志');
 
 -- [3070] 开发测试
 INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES
@@ -275,16 +276,16 @@ INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`)
 SELECT 3, 301, id FROM `sys_menu`
 WHERE tenant_id = 3
   AND (
-      id IN (3000, 3010, 3012, 3017, 3018, 3020, 3021, 3050)
-      OR pid IN (3012, 3017, 3018, 3021, 3050)
+      id IN (3000, 3010, 3011, 3012, 3017, 3018, 3020, 3021, 3050)
+      OR pid IN (3011, 3012, 3017, 3018, 3021, 3050)
       OR pid IN (SELECT id FROM `sys_menu` WHERE tenant_id = 3 AND pid IN (3050))
   );
 
--- 审计管理员 (302): 审计员管理
+-- 审计管理员 (302): 审计员管理（含 CRUD 按钮）
 INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`)
 SELECT 3, 302, id FROM `sys_menu`
 WHERE tenant_id = 3
-  AND (id = 3030 OR pid = 3030);
+  AND (id IN (3030, 3031) OR pid = 3021);
 
 -- 业务管理员 (303): 维护业务操作员和司法取证员
 INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`)
@@ -344,6 +345,3 @@ INSERT INTO `sys_user_dept` (`id`, `creator`, `create_time`, `tenant_id`, `user_
 (302, 301, '2025-01-01 00:00:00', 3, 302, 301);
 
 SET FOREIGN_KEY_CHECKS = 1;
-
--- 显示初始化结果
-SELECT 'KMC 初始化数据写入完成' as '状态';

@@ -68,7 +68,7 @@ fi
 
 if table_exists "${PLATFORM_DB_NAME}" "sys_tenant"; then
   echo "Importing CA platform seed data into ${PLATFORM_DB_NAME}..."
-  mysql_exec < "${INIT_DIR}/02_ca_4_data.sql"
+  mysql_exec < "${INIT_DIR}/02_ca_4_platform_data.sql"
 else
   echo "Database ${PLATFORM_DB_NAME} is not initialized, skipping CA platform seed data."
 fi

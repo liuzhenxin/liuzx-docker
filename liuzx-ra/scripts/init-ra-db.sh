@@ -80,7 +80,7 @@ if table_exists "${RA_DB_NAME}" "ra_cert_policy"; then
   default_policy_count="$(ra_default_policy_count)"
   if [ "${default_policy_count}" = "0" ]; then
     echo "Importing ${RA_DB_NAME} default certificate policy..."
-    mysql_exec "${RA_DB_NAME}" < "${INIT_DIR}/02_ra_4_data.sql"
+    mysql_exec "${RA_DB_NAME}" < "${INIT_DIR}/03_ra_4_data.sql"
   else
     echo "RA default certificate policy already exists in ${RA_DB_NAME}, skipping seed data import."
   fi
@@ -92,7 +92,7 @@ if table_exists "${PLATFORM_DB_NAME}" "sys_menu"; then
   platform_menu_count="$(ra_platform_menu_count)"
   if [ "${platform_menu_count}" = "0" ]; then
     echo "Importing RA platform menu, permission and base user data into ${PLATFORM_DB_NAME}..."
-    mysql_exec "${PLATFORM_DB_NAME}" < "${INIT_DIR}/03_ra_4_platform_data.sql"
+    mysql_exec "${PLATFORM_DB_NAME}" < "${INIT_DIR}/02_ra_4_platform_data.sql"
   else
     echo "RA platform data already exists in ${PLATFORM_DB_NAME}, skipping platform data import."
   fi

@@ -30,8 +30,10 @@ DELETE FROM `sys_tenant` WHERE `id` = 4;
 -- ----------------------------
 -- 1. sys_tenant (租户)
 -- ----------------------------
-INSERT INTO `sys_tenant` (`id`, `creator`, `create_time`, `tenant_id`, `name`, `code`, `status`, `source_id`, `package_id`)
-VALUES (4, 401, '2024-05-15 14:42:36', 4, '证书认证系统', 'ca', -1, 4, 4);
+INSERT INTO `sys_tenant`
+  (`id`, `creator`, `editor`, `create_time`, `update_time`, `del_flag`, `version`, `tenant_id`, `name`, `code`, `status`, `source_id`, `package_id`)
+VALUES
+  (4, 401, NULL, '2024-05-15 14:42:36', NULL, 0, 0, 4, '证书认证系统', 'ca', 0, 4, 4);
 
 -- ----------------------------
 -- 2. sys_dept (部门)
@@ -54,13 +56,13 @@ VALUES (401, 0, '总部', '0,401', 0, 4);
 -- ----------------------------
 
 -- [4000] 安装向导
-INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4000, 1, '安装向导', 'setup', 'C', 1, 'setup', 'ca/init/index', 1, 0, '0', '0', 'tree-table', 4, '安装向导');
+INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4000, 1, '安装向导', 'setup', 'C', 1, 'setup', 'ca/init/index', 1, 0, '0', '0', 'guide', 4, '安装向导');
 
 -- [4010] 安全管理 (目录)
 INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4010, 0, '安全管理', '', 'M', 3010, 'ca-security', '', 1, 0, '0', '0', 'tool', 4, '安全管理目录');
 
 -- [4011] 根证书管理
-INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4011, 4010, '根证书管理', 'ca:root', 'C', 1, 'ca-root-cert', 'ca/root/index', 1, 0, '0', '0', '', 4, '根证书管理');
+INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4011, 4010, '根证书管理', 'ca:root', 'C', 1, 'ca-root-cert', 'ca/root/index', 1, 0, '0', '0', 'key', 4, '根证书管理');
 -- 按钮: 4111-4129
 INSERT INTO `sys_menu` (id, pid, name, permission, type, sort, tenant_id) VALUES 
 (4111, 4011, '分页查询', 'ca:root:page', 'F', 1, 4),
@@ -83,7 +85,7 @@ INSERT INTO `sys_menu` (id, pid, name, permission, type, sort, tenant_id) VALUES
 (4128, 4011, 'CRL配置', 'ca:root:crl-config', 'F', 18, 4);
 
 -- [4012] 模板管理
-INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4012, 4010, '模板管理', 'ca:profile', 'C', 2, 'ca-profile', 'ca/profile/index', 1, 0, '0', '0', '', 4, '模板管理');
+INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4012, 4010, '模板管理', 'ca:profile', 'C', 2, 'ca-profile', 'ca/profile/index', 1, 0, '0', '0', 'form', 4, '模板管理');
 -- 按钮: 4131-4149
 INSERT INTO `sys_menu` (id, pid, name, permission, type, sort, tenant_id) VALUES 
 (4131, 4012, '分页查询', 'ca:profile:page', 'F', 1, 4),
@@ -97,7 +99,7 @@ INSERT INTO `sys_menu` (id, pid, name, permission, type, sort, tenant_id) VALUES
 (4139, 4012, '列表查询', 'ca:profile:list', 'F', 9, 4);
 
 -- [4013] 请求者管理
-INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4013, 4010, '请求者管理', 'ca:requestor', 'C', 3, 'ca-requestor', 'ca/requestor/index', 1, 0, '0', '0', '', 4, '请求者管理');
+INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4013, 4010, '请求者管理', 'ca:requestor', 'C', 3, 'ca-requestor', 'ca/requestor/index', 1, 0, '0', '0', 'people', 4, '请求者管理');
 -- 按钮: 4151-4169
 INSERT INTO `sys_menu` (id, pid, name, permission, type, sort, tenant_id) VALUES 
 (4151, 4013, '分页查询', 'ca:requestor:page', 'F', 1, 4),
@@ -110,7 +112,7 @@ INSERT INTO `sys_menu` (id, pid, name, permission, type, sort, tenant_id) VALUES
 (4158, 4013, '导出请求者', 'ca:requestor:export', 'F', 8, 4);
 
 -- [4014] 签名者管理
-INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4014, 4010, '签名者管理', 'ca:signer', 'C', 4, 'ca-signer', 'ca/signer/index', 1, 0, '0', '0', '', 4, '签名者管理');
+INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4014, 4010, '签名者管理', 'ca:signer', 'C', 4, 'ca-signer', 'ca/signer/index', 1, 0, '0', '0', 'stamp', 4, '签名者管理');
 -- 按钮: 4171-4189
 INSERT INTO `sys_menu` (id, pid, name, permission, type, sort, tenant_id) VALUES 
 (4171, 4014, '列表查询', 'ca:signer:list', 'F', 1, 4),
@@ -121,14 +123,14 @@ INSERT INTO `sys_menu` (id, pid, name, permission, type, sort, tenant_id) VALUES
 (4176, 4014, '查看详情', 'ca:signer:detail', 'F', 6, 4);
 
 -- [4015] 系统配置
-INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4015, 4010, '系统配置', 'ca:config', 'C', 5, 'ca-config', 'ca/config/index', 1, 0, '0', '0', '', 4, 'CA系统配置');
+INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4015, 4010, '系统配置', 'ca:config', 'C', 5, 'ca-config', 'ca/config/index', 1, 0, '0', '0', 'system', 4, 'CA系统配置');
 -- 按钮: 4181-4189
 INSERT INTO `sys_menu` (id, pid, name, permission, type, sort, tenant_id) VALUES
 (4181, 4015, '读取配置', 'ca:config:get', 'F', 1, 4),
 (4182, 4015, '保存配置', 'ca:config:save', 'F', 2, 4);
 
 -- [4016] 发布者管理
-INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4016, 4010, '发布者管理', 'ca:publisher', 'C', 6, 'ca-publisher', 'ca/publisher/index', 1, 0, '0', '0', '', 4, '发布者管理');
+INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4016, 4010, '发布者管理', 'ca:publisher', 'C', 6, 'ca-publisher', 'ca/publisher/index', 1, 0, '0', '0', 'upload', 4, '发布者管理');
 -- 按钮: 4191-4199
 INSERT INTO `sys_menu` (id, pid, name, permission, type, sort, tenant_id) VALUES
 (4191, 4016, '分页查询', 'ca:publisher:page', 'F', 1, 4),
@@ -138,20 +140,27 @@ INSERT INTO `sys_menu` (id, pid, name, permission, type, sort, tenant_id) VALUES
 (4195, 4016, '删除发布者', 'ca:publisher:remove', 'F', 5, 4),
 (4196, 4016, '导入发布者', 'ca:publisher:import', 'F', 6, 4),
 (4197, 4016, '导出发布者', 'ca:publisher:export', 'F', 7, 4);
+-- 发布操作权限: 4255-4259
+INSERT INTO `sys_menu` (id, pid, name, permission, type, sort, tenant_id) VALUES
+	(4255, 4016, '手动发布证书', 'ca:publisher:publish', 'F', 10, 4),
+	(4256, 4016, '重试发布', 'ca:publisher:retry', 'F', 11, 4),
+	(4257, 4016, '分页查询发布队列', 'ca:publisher:queue:page', 'F', 12, 4),
+	(4258, 4016, '查询发布状态', 'ca:publisher:queue:status', 'F', 13, 4),
+	(4259, 4016, '测试发布点连接', 'ca:publisher:test', 'F', 14, 4);
 
 -- [4020] 管理员管理
 INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4020, 0, '管理员管理', '', 'M', 3020, 'ca-admin', '', 1, 0, '0', '0', 'peoples', 4, '管理员管理');
-INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4021, 4020, '业务管理员', 'ca:admin', 'C', 1, 'ca-admin-operator', 'ca/admin/index', 1, 0, '0', '0', '', 4, '业务管理员');
+INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4021, 4020, '业务管理员', 'ca:admin', 'C', 1, 'ca-admin-operator', 'ca/admin/index', 1, 0, '0', '0', 'peoples', 4, '业务管理员');
 
 -- [4030] 审计员管理
 INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4030, 0, '审计员管理', '', 'M', 4030, 'ca-audit-manager', '', 1, 0, '0', '0', 'user', 4, '审计员管理');
-INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4031, 4030, '审计员', 'ca:audit', 'C', 1, 'ca-audit', 'ca/audit/index', 1, 0, '0', '0', '', 4, '审计员');
+INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4031, 4030, '审计员', 'ca:audit', 'C', 1, 'ca-audit', 'ca/audit/index', 1, 0, '0', '0', 'user', 4, '审计员');
 
 -- [4040] 业务管理
 INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4040, 0, '业务管理', '', 'M', 3040, 'ca-function', '', 1, 0, '0', '0', 'shopping', 4, '业务管理目录');
 
 -- [4041] 证书管理
-INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4041, 4040, '证书管理', 'ca:cert', 'C', 1, 'ca-cert', 'ca/cert/index', 1, 0, '0', '0', '', 4, '证书管理');
+INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4041, 4040, '证书管理', 'ca:cert', 'C', 1, 'ca-cert', 'ca/cert/index', 1, 0, '0', '0', 'cert', 4, '证书管理');
 -- 按钮: 4201-4219
 INSERT INTO `sys_menu` (id, pid, name, permission, type, sort, tenant_id) VALUES 
 (4201, 4041, '分页查询', 'ca:cert:page', 'F', 1, 4),
@@ -172,7 +181,7 @@ INSERT INTO `sys_menu` (id, pid, name, permission, type, sort, tenant_id) VALUES
 (4216, 4041, '证书重签', 'ca:cert:reissue', 'F', 16, 4);
 
 -- [4042] CRL管理
-INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4042, 4040, 'CRL管理', 'ca:crl', 'C', 2, 'ca-crl', 'ca/crl/index', 1, 0, '0', '0', '', 4, 'CRL管理');
+INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4042, 4040, 'CRL管理', 'ca:crl', 'C', 2, 'ca-crl', 'ca/crl/index', 1, 0, '0', '0', 'clipboard', 4, 'CRL管理');
 -- 按钮: 4221-4239
 INSERT INTO `sys_menu` (id, pid, name, permission, type, sort, tenant_id) VALUES 
 (4221, 4042, '列表查询', 'ca:crl:list', 'F', 1, 4),
@@ -186,29 +195,18 @@ INSERT INTO `sys_menu` (id, pid, name, permission, type, sort, tenant_id) VALUES
 (4229, 4042, '签发CRL', 'ca:crl:issue', 'F', 9, 4),
 (4230, 4042, '发布CRL', 'ca:crl:publish', 'F', 10, 4);
 
--- [4043] 证书签发
-INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4043, 4040, '证书签发', 'ca:cert:issue', 'C', 3, 'ca-cert-issue', 'ca/cert/issue/index', 1, 0, '0', '0', '', 4, '证书签发');
-
--- [4044] CMP协议
-INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4044, 4040, 'CMP协议', 'ca:cmp', 'C', 4, 'ca-cmp', 'ca/cmp/index', 1, 0, '0', '0', '', 4, 'CMP协议能力管理');
-INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `tenant_id`) VALUES
-(4241, 4044, '健康检查', 'ca:cmp:health', 'F', 1, 4),
-(4242, 4044, '请求者配置', 'ca:cmp:requestor', 'F', 2, 4),
-(4243, 4044, '协议测试', 'ca:cmp:test', 'F', 3, 4),
-(4244, 4044, '交易日志', 'ca:cmp:log', 'F', 4, 4);
-
 -- [4050] 审计管理 (日志)
 INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4050, 0, '审计管理', '', 'M', 3050, 'ca-log', '', 1, 0, '0', '0', 'documentation', 4, '审计管理目录');
-INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4051, 4050, '登录日志', 'ca:log:login', 'C', 1, 'ca-log-login', 'ca/log/login/index', 1, 0, '0', '0', '', 4, '登录日志');
-INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4052, 4050, '业务日志', 'ca:log:operator', 'C', 2, 'ca-log-operator', 'ca/log/operator/index', 1, 0, '0', '0', '', 4, '业务日志');
+INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4051, 4050, '登录日志', 'sys:login-log:page', 'C', 1, 'ca-log-login', 'ca/log/login/index', 1, 0, '0', '0', 'logininfor', 4, '登录日志');
+INSERT INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`) VALUES (4052, 4050, '业务日志', 'sys:operate-log:page', 'C', 2, 'ca-log-operator', 'ca/log/operator/index', 1, 0, '0', '0', 'log', 4, '业务日志');
 
 -- ----------------------------
 -- 4. sys_user (用户)
--- admin / 11111111, audit / 11111111
+-- admin / Qwe123!!, audit / Qwe123!!
 -- ----------------------------
 INSERT INTO `sys_user` (`id`, `creator`, `create_time`, `tenant_id`, `dept_id`, `password`, `super_admin`, `status`, `username`) VALUES 
-(401, 401, '2025-01-01 00:00:00', 4, 401, '{bcrypt}$2a$10$oZfSMv8EDmlWa0szVQ6B3uTbcp6pEmcCFFFDqzfUp7ghB8UqBD7Om', 0, 0, 'Ylh4QTF0YmdEWWJRimFMPGaJmldyuWIb9BNmUN1ULMI7'),
-(402, 401, '2025-01-01 00:00:00', 4, 401, '{bcrypt}$2a$10$oZfSMv8EDmlWa0szVQ6B3uTbcp6pEmcCFFFDqzfUp7ghB8UqBD7Om', 0, 0, 'Ylh4QTF0YmdEWWJRinBFPHx7Fvv2RgCsa2ib2oZvdGfT');
+(401, 401, '2025-01-01 00:00:00', 4, 401, '{bcrypt}$2a$10$WxkUYA/zsqbyfKe7x/3bP.TSFAcX2nrap3G7lASYSLoOdDDafY.Me', 0, 0, 'Ylh4QTF0YmdEWWJRimFMPGaJmldyuWIb9BNmUN1ULMI7'),
+(402, 401, '2025-01-01 00:00:00', 4, 401, '{bcrypt}$2a$10$WxkUYA/zsqbyfKe7x/3bP.TSFAcX2nrap3G7lASYSLoOdDDafY.Me', 0, 0, 'Ylh4QTF0YmdEWWJRinBFPHx7Fvv2RgCsa2ib2oZvdGfT');
 
 -- ----------------------------
 -- 5. sys_role (角色)
@@ -233,10 +231,52 @@ WHERE tenant_id = 4
       OR pid IN (SELECT id FROM `sys_menu` WHERE tenant_id = 4 AND pid IN (4010, 4020))
   );
 
+-- 管理员 (401): 安装向导权限
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 401, 4000);
+
+-- 管理员 (401): 证书管理(4041)及下属权限
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 401, 4041);
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) SELECT 4, 401, id FROM `sys_menu` WHERE pid = 4041;
+
 -- 业务管理员 (403): 拥有业务管理(4040)及下属所有权限
 INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4040);
 INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) SELECT 4, 403, id FROM `sys_menu` WHERE pid = 4040;
 INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) SELECT 4, 403, id FROM `sys_menu` WHERE pid IN (SELECT id FROM `sys_menu` WHERE pid = 4040);
+
+-- 业务管理员 (403): 模板管理(4012)只读权限（证书管理页面需查询模板列表）
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4012);
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4131);
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4139);
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4132);
+
+-- 业务管理员 (403): 请求者管理(4013)只读
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4013);
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4151);
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4152);
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4153);
+
+-- 业务管理员 (403): 签名者管理(4014)只读
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4014);
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4171);
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4175);
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4176);
+
+-- 业务管理员 (403): 发布者管理(4016)只读
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4016);
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4191);
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4192);
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4257);
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4258);
+
+-- 业务管理员 (403): 系统配置(4015)只读
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4015);
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4181);
+
+-- 业务管理员 (403): 根证书管理(4011)只读
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4011);
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4111);
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4112);
+INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 403, 4113);
 
 -- 审计管理员 (402): 拥有审计员管理(4030)及下属权限
 INSERT INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES (4, 402, 4030);
@@ -263,3 +303,59 @@ INSERT INTO `sys_role_dept` (`id`, `creator`, `create_time`, `tenant_id`, `role_
 SET FOREIGN_KEY_CHECKS = 1;
 
 SELECT '03_init_data.sql executed successfully and IDs organized' AS status;
+
+-- ============================================================================
+-- 归档证书管理菜单
+-- ============================================================================
+
+INSERT IGNORE INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `path`, `component`, `is_frame`, `is_cache`, `visible`, `status`, `icon`, `tenant_id`, `remark`)
+VALUES (4045, 4040, '归档证书管理', 'ca:archive-cert', 'C', 2, 'ca-archive-cert', 'ca/archive-cert/index', 1, 0, '0', '0', 'list', 4, '归档证书管理');
+
+INSERT IGNORE INTO `sys_menu` (`id`, `pid`, `name`, `permission`, `type`, `sort`, `tenant_id`) VALUES
+(4251, 4045, '分页查询', 'ca:archive-cert:page', 'F', 1, 4),
+(4252, 4045, '查看详情', 'ca:archive-cert:detail', 'F', 2, 4),
+(4253, 4045, '下载证书', 'ca:archive-cert:download', 'F', 3, 4),
+(4254, 4045, '导出证书', 'ca:archive-cert:export', 'F', 4, 4);
+
+INSERT IGNORE INTO `sys_role_menu` (`tenant_id`, `role_id`, `menu_id`) VALUES
+(4, 403, 4045),
+(4, 403, 4251),
+(4, 403, 4252),
+(4, 403, 4253),
+(4, 403, 4254);
+
+-- ============================================================================
+-- 菜单图标
+-- ============================================================================
+
+UPDATE `sys_menu`
+SET `icon` = CASE `id`
+    WHEN 4000 THEN 'guide'
+    WHEN 4010 THEN 'tool'
+    WHEN 4011 THEN 'key'
+    WHEN 4012 THEN 'form'
+    WHEN 4013 THEN 'people'
+    WHEN 4014 THEN 'stamp'
+    WHEN 4015 THEN 'system'
+    WHEN 4016 THEN 'upload'
+    WHEN 4020 THEN 'peoples'
+    WHEN 4021 THEN 'peoples'
+    WHEN 4030 THEN 'user'
+    WHEN 4031 THEN 'user'
+    WHEN 4040 THEN 'shopping'
+    WHEN 4041 THEN 'cert'
+    WHEN 4042 THEN 'clipboard'
+    WHEN 4045 THEN 'list'
+    WHEN 4050 THEN 'documentation'
+    WHEN 4051 THEN 'logininfor'
+    WHEN 4052 THEN 'log'
+    WHEN 4061 THEN 'lock'
+    ELSE `icon`
+END
+WHERE `tenant_id` = 4
+  AND `type` IN ('M', 'C')
+  AND `id` IN (4000, 4010, 4011, 4012, 4013, 4014, 4015, 4016,
+               4020, 4021, 4030, 4031, 4040, 4041, 4042,
+               4045, 4050, 4051, 4052, 4061);
+
+SELECT '02_ca_4_platform_data.sql executed successfully' AS status;

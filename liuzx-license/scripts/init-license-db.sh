@@ -79,6 +79,9 @@ if table_exists "${PLATFORM_DB_NAME}" "sys_menu"; then
   else
     echo "License platform data already exists in ${PLATFORM_DB_NAME}, skipping platform data import."
   fi
+  echo "Marking License tenant as initialized in ${PLATFORM_DB_NAME}..."
+  mysql_exec "${PLATFORM_DB_NAME}" \
+    -e "UPDATE sys_tenant SET status=-1, update_time=NOW() WHERE id=2 OR tenant_id=2;"
 else
   echo "Database ${PLATFORM_DB_NAME} is not initialized, skipping License platform data import."
 fi

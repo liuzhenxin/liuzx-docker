@@ -1,23 +1,4 @@
 services:
-  liuzx-kmc-db-init:
-    image: docker:27-cli
-    container_name: liuzx-kmc-db-init
-    environment:
-      MYSQL_CONTAINER: "${KMC_DB_MYSQL_CONTAINER:-liuzx-mysql}"
-      MYSQL_USER: "${KMC_DB_USER:-root}"
-      MYSQL_PASSWORD: "${KMC_DB_PASSWORD:-11111111}"
-      KMC_DB_NAME: "${KMC_DB_NAME:-lcloud_kmc_4}"
-      PLATFORM_DB_NAME: "${PLATFORM_DB_NAME:-lcloud_platform_4}"
-      INIT_DIR: /kmc-db-init
-    volumes:
-      - ./scripts/init-kmc-db.sh:/usr/local/bin/init-kmc-db.sh:ro
-      - ./mysql/init:/kmc-db-init:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: ["/bin/sh", "/usr/local/bin/init-kmc-db.sh"]
-    init: true
-    restart: "no"
-    network_mode: none
-
   liuzx-kmc:
     build:
       context: .
@@ -33,20 +14,6 @@ services:
       - TZ=Asia/Shanghai
       - JAVA_OPTS=${JAVA_OPTS:--Xms512m -Xmx1024m -Xmn256m}
       - KMC_MASTER_KEY=${KMC_MASTER_KEY}
-      - SERVER_PORT=3443
-      - SERVICE_ID=liuzx-kmc
-      - NODE_ID=${NODE_ID:-1}
-      - NACOS_DISCOVERY_ADDRESS=${NACOS_DISCOVERY_ADDRESS:-nacos:8848}
-      - NACOS_CONFIG_ADDRESS=${NACOS_CONFIG_ADDRESS:-nacos:8848}
-      - NACOS_NAMESPACE=${NACOS_NAMESPACE:-0dac1a68-2f01-40df-bd26-bf0cb199057a}
-      - NACOS_GROUP=${NACOS_GROUP:-LIUZX_GROUP}
-      - NACOS_USERNAME=${NACOS_USERNAME:-nacos}
-      - NACOS_PASSWORD=${NACOS_PASSWORD:-nacos}
-      - NACOS_CLUSTER_NAME=${NACOS_CLUSTER_NAME:-pki-cluster}
-      - SPRING_KAFKA_BOOTSTRAP_SERVERS=${SPRING_KAFKA_BOOTSTRAP_SERVERS:-kafka:9092}
-    depends_on:
-      liuzx-kmc-db-init:
-        condition: service_completed_successfully
     volumes:
       - ./logs:/tmp
       - ./data:/home/kmc/data
@@ -67,6 +34,27 @@ services:
       pki-network:
         aliases:
           - kmc
+
+  liuzx-kmc-db-init:
+    image: docker:27-cli
+    container_name: liuzx-kmc-db-init
+    profiles:
+      - init
+    environment:
+      MYSQL_CONTAINER: "${KMC_DB_MYSQL_CONTAINER:-liuzx-mysql}"
+      MYSQL_USER: "${KMC_DB_USER:-root}"
+      MYSQL_PASSWORD: "${KMC_DB_PASSWORD:-11111111}"
+      KMC_DB_NAME: "${KMC_DB_NAME:-lcloud_kmc_4}"
+      PLATFORM_DB_NAME: "${PLATFORM_DB_NAME:-lcloud_platform_4}"
+      INIT_DIR: /kmc-db-init
+    volumes:
+      - ./scripts/init-kmc-db.sh:/usr/local/bin/init-kmc-db.sh:ro
+      - ./mysql/init:/kmc-db-init:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["/bin/sh", "/usr/local/bin/init-kmc-db.sh"]
+    init: true
+    restart: "no"
+    network_mode: none
 
 networks:
   pki-network:

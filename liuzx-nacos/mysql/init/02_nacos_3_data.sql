@@ -438,7 +438,7 @@ INSERT INTO `config_info` (id, data_id, group_id, content, md5, gmt_create, gmt_
 SET FOREIGN_KEY_CHECKS = 1;
 
 
--- 同步网关动态路由：兼容 /api/ca/** -> /api/**，避免全新初始化后手工访问 /api/ca/** 返回 404。
+-- 同步网关动态路由。
 SET @gateway_router_json = '[
   {
     "id": "liuzx-auth",
@@ -537,38 +537,6 @@ SET @gateway_router_json = '[
     "order": 1
   },
   {
-    "id": "liuzx-ca-api",
-    "uri": "lb://liuzx-ca",
-    "predicates": [
-      {
-        "name": "Path",
-        "args": {
-          "pattern": "/api/ca/**"
-        }
-      },
-      {
-        "name": "Weight",
-        "args": {
-          "_genkey_0": "ca-api",
-          "_genkey_1": "100"
-        }
-      }
-    ],
-    "filters": [
-      {
-        "name": "RewritePath",
-        "args": {
-          "_genkey_0": "/api/ca/(?<path>.*)",
-          "_genkey_1": "/api/${path}"
-        }
-      }
-    ],
-    "metadata": {
-      "version": "v1"
-    },
-    "order": 1
-  },
-  {
     "id": "liuzx-kmc",
     "uri": "lb://liuzx-kmc",
     "predicates": [
@@ -636,7 +604,7 @@ SET @gateway_router_json = '[
 ';
 UPDATE `config_info`
 SET `content` = @gateway_router_json,
-    `md5` = '110b6c4cbae6c1541cb35b8388eb2710',
+    `md5` = '374b68c11befd6ed91a55013f5f1e5e5',
     `gmt_modified` = NOW()
 WHERE `data_id` = 'router.json'
   AND `group_id` = 'LIUZX_GROUP';

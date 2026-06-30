@@ -47,17 +47,17 @@
   liuzx-nacos（依赖 mysql8）
 
 第三层 - 平台服务：
-  liuzx-snowflake-id  （Nacos、Kafka）
-  liuzx-auth          （Nacos）
-  liuzx-admin         （MySQL、Nacos）
   liuzx-gateway       （Nacos、Redis、Kafka）
+  liuzx-snowflake-id  （Nacos、Kafka）
+  liuzx-admin         （MySQL、Nacos）
+  liuzx-auth          （Nacos）
+
+第四层 - 业务服务：
   liuzx-kmc           （MySQL、Nacos、Kafka）
   liuzx-ca            （MySQL、Nacos、Kafka）
   liuzx-license       （Nacos、Redis、Kafka）
   liuzx-ocsp          （MySQL、Nacos）
   liuzx-ra            （MySQL、Redis、Nacos、Kafka）
-
-第四层 - 业务服务：
   liuzx-nas           （MySQL、Nacos、Kafka、HSM 硬件）
 
 第五层 - 前端：
@@ -946,4 +946,4 @@ cd /opt/liuzx-docker
 ./scripts/offline-manage.sh status
 ./scripts/offline-manage.sh health
 docker ps
-``` 
+```

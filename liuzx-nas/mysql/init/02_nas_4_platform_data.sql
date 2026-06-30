@@ -33,8 +33,10 @@ DELETE FROM `sys_tenant` WHERE `id` = 10;
 -- 1. sys_tenant (租户)
 -- ----------------------------
 BEGIN;
-REPLACE INTO sys_tenant (id, creator, create_time, del_flag, version, tenant_id, name, code, status, source_id, package_id)
-VALUES (10, 101, NOW(), 0, 1, 10, '文件迁移系统', 'nas', -1, 10, 10);
+INSERT INTO `sys_tenant`
+  (`id`, `creator`, `editor`, `create_time`, `update_time`, `del_flag`, `version`, `tenant_id`, `name`, `code`, `status`, `source_id`, `package_id`)
+VALUES
+  (10, 101, NULL, '2024-05-15 14:42:36', NULL, 0, 1, 10, '文件迁移系统', 'nas', 0, 10, 10);
 COMMIT;
 
 -- ----------------------------

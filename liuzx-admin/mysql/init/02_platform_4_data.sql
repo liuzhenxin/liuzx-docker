@@ -30,11 +30,7 @@ BEGIN;
 INSERT INTO `sys_tenant`
 	(`id`, `creator`, `editor`, `create_time` 	   	, `update_time`, `del_flag`, `version`, `tenant_id`, `name`	, `code`  , `status`, `source_id`, `package_id`)
 VALUES
-	(1	 , 1		, NULL	  , '2023-09-17 15:42:27', NULL		   , 0		  , 1		 , 1   		  , '云平台'	, 'cloud' , 0		, 1		   , 1),
-	(3	 , 301		, NULL	  , '2024-05-15 14:42:36', NULL		   , 0		  , 0		 , 3   		  , '密钥管理中心', 'kmc'   , -1		, 3		   , 3),
-	(4	 , 401		, NULL	  , '2024-05-15 14:42:36', NULL		   , 0		  , 0		 , 4   		  , '证书认证系统', 'ca'    , -1		, 4		   , 4),
-	(5	 , 501		, NULL	  , '2024-05-15 14:42:36', NULL		   , 0		  , 1		 , 5   		  , '注册认证中心', 'ra'    , 0		, 5		   , 5),
-	(10	 , 101		, NULL	  , '2024-05-15 14:42:36', NULL		   , 0		  , 1		 , 10  		  , '文件迁移系统', 'nas'   , -1		, 10	   , 10);
+	(1	 , 1		, NULL	  , '2023-09-17 15:42:27', NULL		   , 0		  , 1		 , 1   		  , '云平台'	, 'cloud' , 0		, 1		   , 1);
 
 COMMIT;
 
@@ -64,7 +60,7 @@ BEGIN;
 INSERT INTO `sys_menu`
 	(`id`, `creator` , `create_time`        , `editor`, `update_time`, `pid`, `name`  , `permission`, `type`, `sort`, `path` , `component`, `query_param`, `is_frame`, `is_cache`, `visible`, `status`, `icon`  , `del_flag`, `version`, `tenant_id`, `remark`)
 VALUES
-	(1   , 1		 , '2025-01-01 00:00:00', NULL    , NULL         , 0    , '初始化', ''         , 'M'   , 1    , 'position', ''  		  , ''           , 1		  , 0         , '0'      , '0'     , 'system', 0        , 0        , 1          , '初始化目录');
+	(1   , 1		 , '2025-01-01 00:00:00', NULL    , NULL         , 0    , '初始化', ''         , 'M'   , 1    , 'ca', ''  		  , ''           , 1		  , 0         , '0'      , '0'     , 'system', 0        , 0        , 1          , '初始化目录');
 
 -- 系统管理 --2
 INSERT INTO `sys_menu`
@@ -455,7 +451,7 @@ VALUES
 INSERT INTO `sys_dict_item`
 (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `label`  , `value`, `sort`, `css_class`, `list_class`, `is_default`, `status`, `remark`  , `type_id`)
 VALUES
-(13  , 1		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 1          , '已初始化'	   , '1'    , 1     , ''         , ''          , 'N'         , 0       , '已初始化状态', 6);
+(13  , 1		 , NULL    , '2025-01-01 00:00:00', NULL         , 0        , 0        , 1          , '已初始化'	   , '-1'   , 1     , ''         , ''          , 'N'         , 0       , '已初始化状态', 6);
 
 INSERT INTO `sys_dict_item`
 (`id`, `creator` , `editor`, `create_time`        , `update_time`, `del_flag`, `version`, `tenant_id`, `label`  , `value`, `sort`, `css_class`, `list_class`, `is_default`, `status`, `remark`  , `type_id`)

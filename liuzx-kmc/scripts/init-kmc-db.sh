@@ -75,7 +75,7 @@ if table_exists "${PLATFORM_DB_NAME}" "sys_menu"; then
   platform_menu_count="$(kmc_platform_menu_count)"
   if [ "${platform_menu_count}" = "0" ]; then
     echo "Importing KMC platform menu, permission and base user data into ${PLATFORM_DB_NAME}..."
-    mysql_exec "${PLATFORM_DB_NAME}" < "${INIT_DIR}/02_kmc_4_data.sql"
+    mysql_exec "${PLATFORM_DB_NAME}" < "${INIT_DIR}/02_kmc_4_platform_data.sql"
   else
     echo "KMC platform data already exists in ${PLATFORM_DB_NAME}, skipping platform data import."
   fi

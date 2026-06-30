@@ -445,6 +445,7 @@ CREATE TABLE `sys_user` (
 								 `mail` varchar(100) DEFAULT NULL COMMENT '用户邮箱',
 								 `mobile` varchar(100) DEFAULT NULL COMMENT '用户手机号',
 								 `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '用户状态 0正常 1停用',
+									 `user_category` varchar(50) DEFAULT NULL COMMENT '用户分类',
 								 `avatar` varchar(400) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '用户头像',
 								 `cert_sn` varchar(128) DEFAULT NULL COMMENT '证书序列号',
 								 `cert_pem` text COMMENT '证书PEM编码',
