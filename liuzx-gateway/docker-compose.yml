@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: liuzx-gateway
-    image: liuzx-gateway:${LIUZX_GATEWAY_VERSION}
+    image: liuzx-gateway:${LIUZX_VERSION}
     env_file:
       - .env
     ports:

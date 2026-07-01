@@ -23,7 +23,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: liuzx-ra
-    image: liuzx-ra:${LIUZX_RA_VERSION}
+    image: liuzx-ra:${LIUZX_VERSION}
     env_file:
       - .env
     ports:
@@ -49,6 +49,8 @@ services:
       - NACOS_DISCOVERY_ENABLED=${NACOS_DISCOVERY_ENABLED:-false}
       - NACOS_CONFIG_ENABLED=${NACOS_CONFIG_ENABLED:-false}
       - NACOS_ADDRESS=${NACOS_ADDRESS:-nacos:8848}
+      - NACOS_DISCOVERY_ADDRESS=${NACOS_DISCOVERY_ADDRESS:-nacos:8848}
+      - NACOS_CONFIG_ADDRESS=${NACOS_CONFIG_ADDRESS:-nacos:8848}
       - NACOS_NAMESPACE=${NACOS_NAMESPACE:-0dac1a68-2f01-40df-bd26-bf0cb199057a}
       - NACOS_GROUP=${NACOS_GROUP:-LIUZX_GROUP}
       - NACOS_USERNAME=${NACOS_USERNAME:-nacos}

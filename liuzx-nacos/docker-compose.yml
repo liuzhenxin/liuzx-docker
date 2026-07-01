@@ -24,7 +24,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: liuzx-nacos
-    image: liuzx-nacos:${LIUZX_NACOS_VERSION}
+    image: liuzx-nacos:${LIUZX_VERSION}
     env_file:
       - .env
     ports:

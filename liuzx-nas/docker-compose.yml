@@ -23,7 +23,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: liuzx-nas
-    image: liuzx-nas:${LIUZX_NAS_VERSION}
+    image: liuzx-nas:${LIUZX_VERSION}
     env_file:
       - .env
     user: "${NAS_RUN_UID:-1002}:${NAS_RUN_GID:-1002}"

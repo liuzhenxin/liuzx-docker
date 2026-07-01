@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: liuzx-snowflake-id
-    image: liuzx-snowflake-id:${LIUZX_SNOWFLAKE_ID_VERSION}
+    image: liuzx-snowflake-id:${LIUZX_VERSION}
     env_file:
       - .env
     ports:

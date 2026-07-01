@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: liuzx-kmc
-    image: liuzx-kmc:${LIUZX_KMC_VERSION}
+    image: liuzx-kmc:${LIUZX_VERSION}
     env_file:
       - .env
     ports:

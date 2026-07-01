@@ -23,7 +23,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: liuzx-license
-    image: liuzx-license:${LIUZX_LICENSE_VERSION}
+    image: liuzx-license:${LIUZX_VERSION}
     env_file:
       - .env
     ports:
